@@ -6,7 +6,7 @@
   - type: Action
     checkCanInteract: false
     icon:
-      sprite: _CE/Actions/misc.rsi
+      sprite: _CE/Actions/zLevels.rsi
       state: up
   - type: InstantAction
     event: !type:CEZLevelActionUp
@@ -19,7 +19,7 @@
   - type: Action
     checkCanInteract: false
     icon:
-      sprite: _CE/Actions/misc.rsi
+      sprite: _CE/Actions/zLevels.rsi
       state: down
   - type: InstantAction
     event: !type:CEZLevelActionDown
@@ -32,7 +32,7 @@
   - type: Action
     checkCanInteract: false
     icon:
-      sprite: _CE/Actions/misc.rsi
+      sprite: _CE/Actions/zLevels.rsi
       state: eye
   - type: InstantAction
     event: !type:CEToggleZLevelLookUpAction
