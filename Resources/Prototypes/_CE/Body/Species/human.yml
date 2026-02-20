@@ -50,6 +50,7 @@
   categories: [ ForkFiltered, HideSpawnMenu ]
   components:
   - type: Inventory
+    templateId: CEHuman
     displacements:
       neck:
         sizeMaps:
@@ -110,6 +111,11 @@
   - CEBaseSpeciesMob
   id: CEMobHuman
   name: Mr. Human
+  components:
+  - type: CEStats
+    baseStats:
+      Vitality: 5
+  - type: CEVitalityMaxHealth
 
 - type: entity
   parent: OrganBase
