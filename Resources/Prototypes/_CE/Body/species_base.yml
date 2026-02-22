@@ -4,6 +4,8 @@
   - BaseMob
   - MobCombat
   - CEMobDamageable
+  - CEMobMagical
+  - CEMobStatBased
   - StripableInventoryBase
   - BaseSpeciesAppearance
   id: CEBaseSpeciesMob

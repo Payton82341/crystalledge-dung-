@@ -111,11 +111,6 @@
   - CEBaseSpeciesMob
   id: CEMobHuman
   name: Mr. Human
-  components:
-  - type: CEStats
-    baseStats:
-      Vitality: 5
-  - type: CEVitalityMaxHealth
 
 - type: entity
   parent: OrganBase
