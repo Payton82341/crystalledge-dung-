@@ -1,6 +1,7 @@
 using Content.Client._CE.UserInterface.Systems.HealthMana.Widgets;
 using Content.Client.UserInterface.Screens;
 using Content.Client.UserInterface.Systems.Gameplay;
+using Content.Shared._CE.Mana.Core;
 using Content.Shared._CE.Mana.Core.Components;
 using JetBrains.Annotations;
 using Robust.Client.Player;
@@ -27,14 +28,7 @@ public sealed class CEManaUiController : UIController
 
         SubscribeLocalEvent<LocalPlayerAttachedEvent>(OnPlayerAttached);
         SubscribeLocalEvent<LocalPlayerDetachedEvent>(OnPlayerDetached);
-    }
-
-    public override void FrameUpdate(FrameEventArgs args)
-    {
-        base.FrameUpdate(args);
-
-        if (_player.LocalEntity is { } player)
-            UpdateMana(player);
+        SubscribeLocalEvent<CEMagicEnergyLevelChangeEvent>(OnManaStateChanged);
     }
 
     private void OnScreenLoad()
@@ -76,6 +70,14 @@ public sealed class CEManaUiController : UIController
     {
         if (_manaBar != null)
             _manaBar.Visible = false;
+    }
+
+    private void OnManaStateChanged(CEMagicEnergyLevelChangeEvent ev)
+    {
+        if (_player.LocalEntity != ev.Target)
+            return;
+
+        UpdateMana(ev.Target);
     }
 
     private void UpdateMana(EntityUid uid, CEMagicEnergyContainerComponent? container = null)

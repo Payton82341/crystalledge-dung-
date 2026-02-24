@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Content.Client.Items;
 using Content.Client.Stylesheets;
 using Content.Shared._CE.Mana.Core;
@@ -5,17 +6,49 @@ using Content.Shared._CE.Mana.Core.Components;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
+using Robust.Shared.GameStates;
 using Robust.Shared.Timing;
 
 namespace Content.Client._CE.Mana;
 
 public sealed class CEMagicEnergySystem : CESharedMagicEnergySystem
 {
+    private readonly Dictionary<EntityUid, (int Energy, int MaxEnergy)> _previousValues = new();
+
     public override void Initialize()
     {
         base.Initialize();
 
         Subs.ItemStatus<CEMagicEnergyExaminableComponent>( ent => new CEMagicEnergyStatusControl(ent));
+        SubscribeLocalEvent<CEMagicEnergyContainerComponent, AfterAutoHandleStateEvent>(OnAfterAutoHandleState);
+        SubscribeLocalEvent<CEMagicEnergyContainerComponent, ComponentShutdown>(OnComponentShutdown);
+    }
+
+    private void OnAfterAutoHandleState(EntityUid uid, CEMagicEnergyContainerComponent comp, ref AfterAutoHandleStateEvent args)
+    {
+        var currentValues = (comp.Energy, comp.MaxEnergy);
+
+        if (!_previousValues.TryGetValue(uid, out var previousValues))
+        {
+            _previousValues[uid] = currentValues;
+            return;
+        }
+
+        if (previousValues.Energy != currentValues.Energy || previousValues.MaxEnergy != currentValues.MaxEnergy)
+        {
+            _previousValues[uid] = currentValues;
+
+            var changeEvent = new CEMagicEnergyLevelChangeEvent(uid,
+                previousValues.Energy,
+                currentValues.Energy,
+                currentValues.MaxEnergy);
+            RaiseLocalEvent(changeEvent);
+        }
+    }
+
+    private void OnComponentShutdown(EntityUid uid, CEMagicEnergyContainerComponent comp, ComponentShutdown args)
+    {
+        _previousValues.Remove(uid);
     }
 }
 
