@@ -11,7 +11,7 @@ public sealed partial class WeaponArcAttack : CEAnimationActionEntry
     [DataField]
     public float ArcWidth = 90f;
 
-    public override void Play(EntityManager entManager, EntityUid entity, EntityUid? used, Angle angle, TimeSpan frame)
+    public override void Play(EntityManager entManager, EntityUid entity, EntityUid? used, Angle angle, float animationSpeed, TimeSpan frame)
     {
         if (used is null)
             return;
@@ -28,17 +28,20 @@ public sealed partial class WeaponArcAttack : CEAnimationActionEntry
         var entityCoords = transform.GetMapCoordinates(entity);
         var direction = angle + Angle.FromDegrees(-90);
 
+        var range = Range * weapon.RangeMultiplier;
+
         // Raise debug event for arc attack visualization
-        var debugEvent = new CEItemAttackEvent(entityCoords, direction, Range, ArcWidth);
+        var debugEvent = new CEItemAttackEvent(entityCoords, direction, range, ArcWidth);
         entManager.EventBus.RaiseEvent(EventSource.Local, debugEvent);
 
         // Find all entities in the arc
         var targets = lookup.GetEntitiesInArc(
             entityCoords,
-            Range,
+            range,
             direction,
             ArcWidth,
-            LookupFlags.Dynamic | LookupFlags.Static | LookupFlags.Sundries).ToList();
+            LookupFlags.Dynamic | LookupFlags.Static | LookupFlags.Sundries)
+            .ToList();
 
         targets.Remove(entity);
         melee.TryAttack(entity, (used.Value, weapon), targets);

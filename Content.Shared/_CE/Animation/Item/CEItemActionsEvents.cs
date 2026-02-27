@@ -34,9 +34,9 @@ public sealed class CEItemAnimationUseEvent(
 /// Event raised on entity in GetWeapon function to allow systems to manually
 /// specify what the weapon should be.
 /// </summary>
-public sealed class CEGetItemAnimationEvent : HandledEntityEventArgs
+public sealed class CEGetAnimationItemForUseEvent : HandledEntityEventArgs
 {
-    public Entity<CEItemAnimationComponent>? Weapon;
+    public Entity<CEItemAnimationComponent>? Used;
 }
 
 /// <summary>
@@ -46,4 +46,22 @@ public sealed class CEGetItemAnimationEvent : HandledEntityEventArgs
 public sealed class CEStopItemAnimationUseEvent(NetEntity weapon) : EntityEventArgs
 {
     public readonly NetEntity Weapon = weapon;
+}
+
+/// <summary>
+/// It is called on both the item being used and the creature using the item before the animation starts, to calculate the animation's speed.
+/// </summary>
+public sealed class CEGetItemAnimationSpeedEvent : EntityEventArgs
+{
+    private float _multiplier = 1f;
+
+    public void Modify(float multiplier)
+    {
+        _multiplier *= multiplier;
+    }
+
+    public float GetSpeed()
+    {
+        return _multiplier;
+    }
 }

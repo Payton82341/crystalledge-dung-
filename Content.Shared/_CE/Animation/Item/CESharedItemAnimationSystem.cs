@@ -10,6 +10,7 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Popups;
+using Content.Shared.Wieldable.Components;
 using Robust.Shared.Map;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
@@ -38,6 +39,45 @@ public abstract partial class CESharedItemAnimationSystem : EntitySystem
         base.Initialize();
 
         SubscribeAllEvent<CEItemAnimationUseEvent>(OnClientAttackRequest);
+        SubscribeAllEvent<CEStopItemAnimationUseEvent>(OnClientStopRequest);
+
+        SubscribeLocalEvent<CEWieldedItemAnimationComponent, CEGetItemAnimationsEvent>(OnGetItemAnimations);
+    }
+
+    private void OnGetItemAnimations(Entity<CEWieldedItemAnimationComponent> ent, ref CEGetItemAnimationsEvent args)
+    {
+        if (args.Handled)
+            return;
+
+        if (!TryComp<WieldableComponent>(ent, out var wielded))
+            return;
+
+        if (!wielded.Wielded)
+            return;
+
+        if (!ent.Comp.Animations.TryGetValue(args.UseType, out var animations))
+            return;
+
+        args.Animations = animations;
+        args.Handled = true;
+    }
+
+    private void OnClientStopRequest(CEStopItemAnimationUseEvent ev, EntitySessionEventArgs args)
+    {
+        var user = args.SenderSession.AttachedEntity;
+
+        if (user == null)
+            return;
+
+        if (!TryGetWeapon(user.Value, out var weapon) ||
+            weapon.Value.Owner != GetEntity(ev.Weapon))
+            return;
+
+        if (!weapon.Value.Comp.Using)
+            return;
+
+        weapon.Value.Comp.Using = false;
+        DirtyField(weapon.Value.Owner, weapon.Value.Comp, nameof(CEItemAnimationComponent.Using));
     }
 
     private void OnClientAttackRequest(CEItemAnimationUseEvent ev, EntitySessionEventArgs args)
@@ -49,12 +89,12 @@ public abstract partial class CESharedItemAnimationSystem : EntitySystem
             weapon.Value.Owner != GetEntity(ev.Weapon))
             return;
 
-        TryAttack(user, weapon.Value, ev, args.SenderSession, ev.Angle);
+        TryUse(user, weapon.Value, ev, args.SenderSession, ev.Angle);
     }
 
-    private bool TryAttack(
+    private bool TryUse(
         EntityUid user,
-        Entity<CEItemAnimationComponent> weapon,
+        Entity<CEItemAnimationComponent> used,
         CEItemAnimationUseEvent attackEvent,
         ICommonSession? session,
         Angle angle)
@@ -67,43 +107,55 @@ public abstract partial class CESharedItemAnimationSystem : EntitySystem
         if (!Blocker.CanAttack(user))
             return false;
 
-        if (!weapon.Comp.Animations.TryGetValue(attackEvent.UseType, out var animations)
-            || animations.Count == 0)
+        //Get animations
+        List<ProtoId<CEAnimationActionPrototype>> animations = new();
+
+        var animEv = new CEGetItemAnimationsEvent(used, attackEvent.UseType);
+        RaiseLocalEvent(used, animEv);
+
+        if (animEv.Handled && animEv.Animations.Count != 0)
+            animations = animEv.Animations;
+        else //Get default animations
+        {
+            if (used.Comp.Animations.TryGetValue(attackEvent.UseType, out var a))
+                animations = a;
+        }
+
+        if (animations.Count == 0)
             return false;
 
         // Determine combo index.
         // Reset if: different use type, or combo deadline expired.
         var comboIndex = 0;
-        if (weapon.Comp.LastComboUseType == attackEvent.UseType
-            && curTime < weapon.Comp.ComboResetDeadline)
-        {
-            comboIndex = weapon.Comp.ComboIndex % animations.Count;
-        }
+        if (used.Comp.LastComboUseType == attackEvent.UseType && curTime < used.Comp.ComboResetDeadline)
+            comboIndex = used.Comp.ComboIndex % animations.Count;
 
         var animationProtoId = animations[comboIndex];
 
-        if (!AnimationAction.TryPlayAnimation(user, animationProtoId, weapon.Owner, angle))
+        var animationSpeed = GetAnimationSpeed(user, used);
+        if (!AnimationAction.TryPlayAnimation(user, animationProtoId, used.Owner, angle, animationSpeed))
             return false;
 
         // Calculate the deadline: animation duration + configurable delay.
         var animDuration = _proto.Index(animationProtoId).Duration;
-        weapon.Comp.LastComboUseType = attackEvent.UseType;
-        weapon.Comp.ComboIndex = comboIndex + 1;
-        weapon.Comp.ComboResetDeadline = curTime + animDuration + weapon.Comp.ComboResetDelay;
-        Dirty(weapon);
+        used.Comp.LastComboUseType = attackEvent.UseType;
+        used.Comp.ComboIndex = comboIndex + 1;
+        used.Comp.ComboResetDeadline = curTime + (animDuration * animationSpeed) + used.Comp.ComboResetDelay;
+        used.Comp.Using = true;
+        Dirty(used);
 
         return true;
     }
 
-    public bool TryGetWeapon(EntityUid entity, [NotNullWhen(true)] out Entity<CEItemAnimationComponent>? weapon)
+    public bool TryGetWeapon(EntityUid entity, [NotNullWhen(true)] out Entity<CEItemAnimationComponent>? used)
     {
-        weapon = null;
+        used = null;
 
-        var ev = new CEGetItemAnimationEvent();
+        var ev = new CEGetAnimationItemForUseEvent();
         RaiseLocalEvent(entity, ev);
-        if (ev.Handled && ev.Weapon != null)
+        if (ev.Handled && ev.Used != null)
         {
-            weapon = ev.Weapon;
+            used = ev.Used;
             return true;
         }
 
@@ -111,18 +163,33 @@ public abstract partial class CESharedItemAnimationSystem : EntitySystem
         if (_hands.TryGetActiveItem(entity, out var held) &&
             TryComp<CEItemAnimationComponent>(held, out var heldWeapon))
         {
-            weapon = (held.Value, heldWeapon);
+            used = (held.Value, heldWeapon);
             return true;
         }
 
-        // Use own unarmed melee.
+        // Use own body.
         if (TryComp<CEItemAnimationComponent>(entity, out var melee))
         {
-            weapon = (entity, melee);
+            used = (entity, melee);
             return true;
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Returns the animation playback speed, where 1 = 100% speed, 2 = 200% speed
+    /// </summary>
+    private float GetAnimationSpeed(EntityUid entity, Entity<CEItemAnimationComponent> used)
+    {
+        var ev = new CEGetItemAnimationSpeedEvent();
+        RaiseLocalEvent(entity, ev);
+        RaiseLocalEvent(used, ev);
+
+        var speed = ev.GetSpeed();
+        speed *= used.Comp.AnimationSpeed;
+
+        return speed;
     }
 
     /// <summary>
