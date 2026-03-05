@@ -21,7 +21,15 @@ public sealed partial class EntityAnimation : SharedEntityAnimation
 
     private float _animationSpeedMultiplier = 1f;
 
-    public override void Play(EntityManager entManager, EntityUid entity, EntityUid? used, Angle angle, float animationSpeed, TimeSpan frame)
+    public override void Play(
+        EntityManager entManager,
+        EntityUid user,
+        EntityUid? used,
+        Angle angle,
+        float speed,
+        TimeSpan frame,
+        EntityUid? target,
+        EntityCoordinates? position)
     {
         if (!entManager.TryGetComponent<CEWeaponComponent>(used, out var itemAnim))
             return;
@@ -34,9 +42,9 @@ public sealed partial class EntityAnimation : SharedEntityAnimation
         var spriteSystem = entManager.System<SpriteSystem>();
         var animationPlayer = entManager.System<AnimationPlayerSystem>();
 
-        _animationSpeedMultiplier = 1f / animationSpeed;
+        _animationSpeedMultiplier = 1f / speed;
 
-        if (!entManager.TryGetComponent<TransformComponent>(entity, out var userXform)
+        if (!entManager.TryGetComponent<TransformComponent>(user, out var userXform)
             || userXform.MapID == MapId.Nullspace)
             return;
 
@@ -79,7 +87,7 @@ public sealed partial class EntityAnimation : SharedEntityAnimation
         if (FollowUser)
         {
             var track = entManager.EnsureComponent<TrackUserComponent>(effectEntity);
-            track.User = entity;
+            track.User = user;
         }
         else
         {

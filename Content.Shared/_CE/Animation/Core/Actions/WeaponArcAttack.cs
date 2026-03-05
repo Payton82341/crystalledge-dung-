@@ -19,7 +19,15 @@ public sealed partial class WeaponArcAttack : CEAnimationActionEntry
     [DataField]
     public float Power = 1f;
 
-    public override void Play(EntityManager entManager, EntityUid entity, EntityUid? used, Angle angle, float animationSpeed, TimeSpan frame)
+    public override void Play(
+        EntityManager entManager,
+        EntityUid user,
+        EntityUid? used,
+        Angle angle,
+        float speed,
+        TimeSpan frame,
+        EntityUid? target,
+        EntityCoordinates? position)
     {
         if (used is null)
             return;
@@ -33,7 +41,7 @@ public sealed partial class WeaponArcAttack : CEAnimationActionEntry
         var melee = entManager.System<CESharedWeaponSystem>();
 
         // Get entity coordinates
-        var entityCoords = transform.GetMapCoordinates(entity);
+        var entityCoords = transform.GetMapCoordinates(user);
         var direction = new Angle(angle.ToWorldVec());
 
         var range = Range * weapon.RangeMultiplier;
@@ -51,8 +59,8 @@ public sealed partial class WeaponArcAttack : CEAnimationActionEntry
             LookupFlags.Dynamic | LookupFlags.Static | LookupFlags.Sundries)
             .ToList();
 
-        targets.Remove(entity);
-        melee.TryAttack(entity, (used.Value, weapon), targets, Power);
+        targets.Remove(user);
+        melee.TryAttack(user, (used.Value, weapon), targets, Power);
     }
 }
 

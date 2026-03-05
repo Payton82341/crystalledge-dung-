@@ -13,18 +13,8 @@
   - type: CEVisualizeRadiusTargetAction
   - type: CEVisualizeAoEZoneAction
     radius: 0.5
-  - type: CEActionDoAfterSlowdown
-    speedMultiplier: 0.5
   - type: CEActionManaCost
     manaCost: 2
-  - type: DoAfterArgs
-    delay: 1.5
-    breakOnDamage: true
-  - type: CEActionSpeaking
-    startSpeech: "Et curabuntur..."
-    endSpeech: "vulnera tua"
-  - type: CEActionDoAfterVisuals
-    proto: CERuneCureWounds
   - type: Action
     useDelay: 5
     icon:
@@ -37,31 +27,36 @@
     whitelist:
       components:
       - CEHealth
-    event: !type:CEEntityTargetModularEffectEvent
-      telegraphyEffects:
-      - !type:SpawnEntityOnTarget
-        spawns:
-        - CEImpactEffectCureWounds
-      effects:
-      - !type:SpawnEntityOnTarget
-        spawns:
-        - CEImpactEffectCureWounds
-      - !type:Heal
-        amount: 5
+    event: !type:CEEntityTargetActionAnimationEvent
+      animation: AnimationCureWounds
 
-- type: entity
-  id: CERuneCureWounds
-  parent: CEBaseMagicRune
-  categories: [ HideSpawnMenu ]
-  save: false
-  components:
-  - type: PointLight
-    color: "#cedcdd"
-  - type: Sprite
-    layers:
-    - state: sun
-      color: "#cedcdd"
-      shader: unshaded
+- type: animationAction
+  id: AnimationCureWounds
+  movementSpeed: 0.5
+  duration: 1.5
+  events:
+    0:
+    - !type:SpawnEntityOnTarget
+      spawns:
+      - CEImpactEffectCureWounds
+    - !type:SayChat
+      sentence: "Et curabuntur"
+    0.4:
+    - !type:SpawnEntityOnTarget
+      spawns:
+      - CEImpactEffectCureWounds
+    0.8:
+    - !type:SpawnEntityOnTarget
+      spawns:
+      - CEImpactEffectCureWounds
+    1.2:
+    - !type:SpawnEntityOnTarget
+      spawns:
+      - CEImpactEffectCureWounds
+    - !type:Heal
+      amount: 5
+    - !type:SayChat
+      sentence: "vulnera tua"
 
 - type: entity
   id: CEImpactEffectCureWounds

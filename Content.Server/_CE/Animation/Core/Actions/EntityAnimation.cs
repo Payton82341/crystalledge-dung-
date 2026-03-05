@@ -1,17 +1,26 @@
 using Content.Shared._CE.Animation.Core;
 using Content.Shared._CE.Animation.Core.Actions;
+using Robust.Shared.Map;
 using Robust.Shared.Player;
 
 namespace Content.Server._CE.Animation.Core.Actions;
 
 public sealed partial class EntityAnimation : SharedEntityAnimation
 {
-    public override void Play(EntityManager entManager, EntityUid entity, EntityUid? used, Angle angle, float animationSpeed, TimeSpan frame)
+    public override void Play(
+        EntityManager entManager,
+        EntityUid user,
+        EntityUid? used,
+        Angle angle,
+        float speed,
+        TimeSpan frame,
+        EntityUid? target,
+        EntityCoordinates? position)
     {
         // Server sends visual effect event to all non-predicting clients
-        var filter = Filter.PvsExcept(entity, entityManager: entManager);
-        var effectEvent = new CEItemVisualEffectEvent(
-            entManager.GetNetEntity(entity),
+        var filter = Filter.PvsExcept(user, entityManager: entManager);
+        var effectEvent = new CEEntityAnimationEvent(
+            entManager.GetNetEntity(user),
             used.HasValue ? entManager.GetNetEntity(used.Value) : null,
             angle,
             frame);

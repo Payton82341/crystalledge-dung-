@@ -8,7 +8,7 @@
   id: CEActionMageIntellectBuff
   parent: CEActionSpellBase
   name: Arcane Intellect
-  description: You will temporarily receive an additional [color=#3296fa]+4 Intelligence[/color].
+  description: You will temporarily receive an additional [color=#3296fa]+2 Intelligence[/color].
   components:
   - type: CEActionManaCost
     manaCost: 5
@@ -20,18 +20,26 @@
   - type: DoAfterArgs
     delay: 1
   - type: InstantAction
-    event: !type:CEInstantModularEffectEvent
-      telegraphyEffects:
-      - !type:SpawnEntityOnTarget
-        spawns:
-        - CEImpactEffectMageIntellectBuff
-      effects:
-      - !type:SpawnEntityOnTarget
-        spawns:
-        - CEImpactEffectMageIntellectBuff
-      - !type:ApplyStatusEffect
-        statusEffect: CEStatusEffectMageIntellectBuff
-        duration: 60
+    event: !type:CEInstantActionAnimationEvent
+      animation: AnimationIntellectBuff
+
+- type: animationAction
+  id: AnimationIntellectBuff
+  movementSpeed: 0.3
+  duration: 0.6
+  lockRotation: false
+  events:
+    0:
+    - !type:SpawnEntityOnTarget
+      spawns:
+      - CEImpactEffectMageIntellectBuff
+    0.5:
+    - !type:SpawnEntityOnTarget
+      spawns:
+      - CEImpactEffectMageIntellectBuff
+    - !type:ApplyStatusEffect
+      statusEffect: CEStatusEffectMageIntellectBuff
+      duration: 10
 
 - type: entity
   id: CEImpactEffectMageIntellectBuff

@@ -13,16 +13,8 @@
   - type: CEVisualizeRadiusTargetAction
   - type: CEVisualizeAoEZoneAction
     radius: 0.5
-  - type: CEActionDoAfterSlowdown
-    speedMultiplier: 0.5
   - type: CEActionManaCost
     manaCost: 5
-  - type: DoAfterArgs
-    delay: 1.5
-    breakOnDamage: true
-  - type: CEActionSpeaking
-    startSpeech: "Et in necessitate..."
-    endSpeech: "vos protegant"
   - type: Action
     useDelay: 1
     icon:
@@ -35,10 +27,24 @@
     whitelist:
       components:
       - CEHealth
-    event: !type:CEEntityTargetModularEffectEvent
-      telegraphyEffects:
-      - !type:SpawnEntityOnTarget
-        spawns:
-        - CEImpactEffectCureWounds
-      effects:
-      - !type:AddDivineShield
+    event: !type:CEEntityTargetActionAnimationEvent
+      animation: AnimationDivineShield
+
+- type: animationAction
+  id: AnimationDivineShield
+  movementSpeed: 0.5
+  duration: 1.5
+  events:
+    0:
+    - !type:SpawnEntityOnTarget
+      spawns:
+      - CEImpactEffectCureWounds
+    - !type:SayChat
+      sentence: "Et in necessitate"
+    0.2:
+    - !type:SpawnEntityOnTarget
+      spawns:
+      - CEImpactEffectCureWounds
+    - !type:SayChat
+      sentence: "vos protegant"
+    - !type:AddDivineShield
