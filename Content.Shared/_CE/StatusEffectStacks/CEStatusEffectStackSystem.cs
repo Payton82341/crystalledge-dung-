@@ -1,7 +1,10 @@
 using Content.Shared.Alert;
 using Content.Shared.StatusEffectNew;
 using Content.Shared.StatusEffectNew.Components;
+using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Serialization;
+using Robust.Shared.Timing;
 
 namespace Content.Shared._CE.StatusEffectStacks;
 
@@ -9,17 +12,38 @@ public sealed class CEStatusEffectStackSystem : EntitySystem
 {
     [Dependency] private readonly StatusEffectsSystem _statusEffect = default!;
     [Dependency] private readonly AlertsSystem _alerts = default!;
+    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
+    [Dependency] private readonly INetManager _net = default!;
 
     public override void Initialize()
     {
         base.Initialize();
 
         SubscribeLocalEvent<CEStatusEffectStackComponent, CEStatusEffectEndingAttemptEvent>(OnBeforeEnded);
+        SubscribeLocalEvent<CEStatusEffectStackComponent, StatusEffectRemovedEvent>(OnEnded);
+    }
+
+    private void OnEnded(Entity<CEStatusEffectStackComponent> ent, ref StatusEffectRemovedEvent args)
+    {
+        //We disable prediction because status effects has bugs with constatn deletion and respawns, causes bucnh mispredicts calls
+        if (_net.IsClient)
+            return;
+
+        var ev = new CEStatusEffectStackEffectEvent(1);
+        RaiseLocalEvent(ent, ref ev);
     }
 
     private void OnBeforeEnded(Entity<CEStatusEffectStackComponent> ent, ref CEStatusEffectEndingAttemptEvent args)
     {
         if (ent.Comp.Stack <= 1)
+            return;
+
+        // Always cancel the ending on both client and server to prevent visual flicker.
+        // The client predicts the same cancellation, avoiding a brief deletion-then-reappear cycle.
+        args.Cancelled = true;
+
+        // Server handles the actual stack removal and timer extension.
+        if (_net.IsClient)
             return;
 
         var proto = MetaData(ent).EntityPrototype;
@@ -34,8 +58,10 @@ public sealed class CEStatusEffectStackSystem : EntitySystem
         if (duration is null)
             return;
 
+        var ev = new CEStatusEffectStackEffectEvent(ent.Comp.Stack);
+        RaiseLocalEvent(ent, ref ev);
+
         _statusEffect.TryAddTime(statusEffect.AppliedTo.Value, proto, duration.Value);
-        args.Cancelled = true;
         TryRemoveStack(statusEffect.AppliedTo.Value, proto, 1);
     }
 
@@ -175,6 +201,14 @@ public sealed class CEStatusEffectStackSystem : EntitySystem
                 cooldown = effectComp.EndEffectTime;
             _alerts.UpdateAlert(target, alertComp.Alert, cooldown: cooldown);
         }
+
+        var appearanceState = CEStatusEffectStackPowerVisuals.Low;
+        if (newStack >= ent.Comp.MediumAppearance)
+            appearanceState = CEStatusEffectStackPowerVisuals.Medium;
+        if (newStack >= ent.Comp.HighAppearance)
+            appearanceState = CEStatusEffectStackPowerVisuals.High;
+
+        _appearance.SetData(ent, CEStatusEffectStackVisuals.Level, appearanceState);
     }
 }
 
@@ -183,3 +217,23 @@ public sealed class CEStatusEffectStackSystem : EntitySystem
 /// </summary>
 [ByRefEvent]
 public readonly record struct CEStatusEffectStackEditedEvent(EntityUid Target, int oldStack, int newStack);
+
+/// <summary>
+/// Calls on effect entity, when a status effect stacks effect should happens
+/// </summary>
+[ByRefEvent]
+public readonly record struct CEStatusEffectStackEffectEvent(int Stack);
+
+[NetSerializable, Serializable]
+public enum CEStatusEffectStackVisuals
+{
+    Level,
+}
+
+[NetSerializable, Serializable]
+public enum CEStatusEffectStackPowerVisuals
+{
+    Low,
+    Medium,
+    High,
+}
