@@ -39,8 +39,8 @@ public sealed partial class CEMobStateSystem : EntitySystem
         SubscribeLocalEvent<CEMobStateComponent, RejuvenateEvent>(OnRejuvenate);
 
         // Action blocking
-        SubscribeLocalEvent<CEMobStateComponent, ChangeDirectionAttemptEvent>(OnChangeDirectionAttempt);
-        SubscribeLocalEvent<CEMobStateComponent, UpdateCanMoveEvent>(OnUpdateCanMove);
+        SubscribeLocalEvent<CEMobStateComponent, ChangeDirectionAttemptEvent>(OnBlockIfDead);
+        SubscribeLocalEvent<CEMobStateComponent, UpdateCanMoveEvent>(OnBlockIfDead);
         SubscribeLocalEvent<CEMobStateComponent, UseAttemptEvent>(OnBlockIfIncapacitated);
         SubscribeLocalEvent<CEMobStateComponent, AttackAttemptEvent>(OnBlockIfIncapacitated);
         SubscribeLocalEvent<CEMobStateComponent, ThrowAttemptEvent>(OnBlockIfIncapacitated);
@@ -49,7 +49,7 @@ public sealed partial class CEMobStateSystem : EntitySystem
         SubscribeLocalEvent<CEMobStateComponent, StartPullAttemptEvent>(OnBlockIfIncapacitated);
         SubscribeLocalEvent<CEMobStateComponent, StandAttemptEvent>(OnBlockIfIncapacitated);
         SubscribeLocalEvent<CEMobStateComponent, PointAttemptEvent>(OnBlockIfIncapacitated);
-        SubscribeLocalEvent<CEMobStateComponent, SpeakAttemptEvent>(OnSpeakAttempt);
+        SubscribeLocalEvent<CEMobStateComponent, SpeakAttemptEvent>(OnBlockIfDead);
         SubscribeLocalEvent<CEMobStateComponent, IsEquippingAttemptEvent>(OnEquipAttempt);
         SubscribeLocalEvent<CEMobStateComponent, IsUnequippingAttemptEvent>(OnUnequipAttempt);
         SubscribeLocalEvent<CEMobStateComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshMoveSpeed);
@@ -200,21 +200,9 @@ public sealed partial class CEMobStateSystem : EntitySystem
 
     #region Action Blocking
 
-    private void OnChangeDirectionAttempt(EntityUid uid, CEMobStateComponent comp, ChangeDirectionAttemptEvent args)
+    private void OnBlockIfDead(EntityUid uid, CEMobStateComponent comp, CancellableEntityEventArgs args)
     {
-        if (comp.CurrentState == CEMobState.Dead)
-            args.Cancel();
-    }
-
-    private void OnUpdateCanMove(EntityUid uid, CEMobStateComponent comp, UpdateCanMoveEvent args)
-    {
-        if (comp.CurrentState == CEMobState.Dead)
-            args.Cancel();
-    }
-
-    private void OnSpeakAttempt(EntityUid uid, CEMobStateComponent comp, SpeakAttemptEvent args)
-    {
-        if (comp.CurrentState == CEMobState.Dead)
+        if (comp.CurrentState is CEMobState.Dead)
             args.Cancel();
     }
 
