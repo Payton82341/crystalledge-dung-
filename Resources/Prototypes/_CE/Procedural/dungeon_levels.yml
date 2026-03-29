@@ -1,16 +1,3 @@
-# Example dungeon level prototypes using the CEDungeonSystem generator configs.
-
-# A static dungeon level that loads a pre-made map file as-is.
-- type: dungeonLevel
-  id: CEDungeonTestStatic
-  name: Test Static Dungeon
-  stable: true
-  config:
-    !type:CEStaticMapConfig
-    mapPath: /Maps/_CE/Dev/Dev0.yml
-
-# Base abstract prototype for all Mossy Temple dungeon levels.
-# Children override generalCount, blessingCount, cycleCount, maxRoomSize, and exits.
 - type: dungeonLevel
   id: BaseMossyTemple
   abstract: true
@@ -212,6 +199,20 @@
     cycleCount:
       min: 1
       max: 2
+  postProcess:
+  # Mobs
+  - !type:CEBudgetSpawnPostProcess
+    budget: 10
+    wakeOnSpawn: true
+    excludedRoomTypes:
+    - Entrance
+    entries:
+    - proto: CERat
+      cost: 1
+      weight: 3
+    - proto: CEFlem
+      cost: 3
+      weight: 1
 
 # Floor 2: Medium-sized level with more rooms.
 - type: dungeonLevel
@@ -231,12 +232,72 @@
     cycleCount:
       min: 2
       max: 3
+  postProcess:
+  # Mobs
+  - !type:CEBudgetSpawnPostProcess
+    budget: 15
+    wakeOnSpawn: true
+    excludedRoomTypes:
+    - Entrance
+    entries:
+    - proto: CERat
+      cost: 1
+      weight: 3
+    - proto: CEFlem
+      cost: 3
+      weight: 1
+    - proto: CEFlem2
+      cost: 5
+      weight: 0.5
+    - proto: CEFlem3
+      cost: 5
+      weight: 0.5
 
 # Floor 3: Large final level with many rooms and cycles.
 - type: dungeonLevel
   id: MossyTemple3
   parent: BaseMossyTemple
   name: Mossy Temple — Floor 3
+  exits:
+    default: MossyTemple4
+  config:
+    !type:CEProceduralConfig
+    generalCount:
+      min: 10
+      max: 15
+    blessingCount:
+      min: 1
+      max: 2
+    cycleCount:
+      min: 2
+      max: 4
+  postProcess:
+  # Mobs
+  - !type:CEBudgetSpawnPostProcess
+    budget: 20
+    wakeOnSpawn: true
+    excludedRoomTypes:
+    - Entrance
+    entries:
+    - proto: CERat
+      cost: 1
+      weight: 3
+    - proto: CEFlem
+      cost: 3
+      weight: 1
+    - proto: CEFlem2
+      cost: 5
+      weight: 0.5
+    - proto: CEFlem3
+      cost: 5
+      weight: 0.5
+
+
+# Floor 3: Large final level with many rooms and cycles.
+- type: dungeonLevel
+  id: MossyTemple4
+  parent: BaseMossyTemple
+  name: Mossy Temple — Floor 4
   exits:
     default: MossyTemple1 # Loops back for now
   config:
@@ -250,3 +311,23 @@
     cycleCount:
       min: 2
       max: 4
+  postProcess:
+  # Mobs
+  - !type:CEBudgetSpawnPostProcess
+    budget: 40
+    wakeOnSpawn: true
+    excludedRoomTypes:
+    - Entrance
+    entries:
+    - proto: CERat
+      cost: 1
+      weight: 1
+    - proto: CEFlem
+      cost: 3
+      weight: 1
+    - proto: CEFlem2
+      cost: 5
+      weight: 1
+    - proto: CEFlem3
+      cost: 5
+      weight: 1
