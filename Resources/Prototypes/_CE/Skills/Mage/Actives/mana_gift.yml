@@ -8,7 +8,7 @@
   id: CEActionManaGift
   parent: CEActionSpellBase
   name: Mana Gift
-  description: Restore 5 mana to the selected target
+  description: Restore [color=#3082f5]5 mana[/color] to the selected target
   components:
   - type: CEVisualizeRadiusTargetAction
   - type: CEVisualizeAoEZoneAction
