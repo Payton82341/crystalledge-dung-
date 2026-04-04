@@ -19,7 +19,7 @@
   - type: Action
     useDelay: 1
     icon:
-      sprite: _CE/Skills/sphere_of_light.rsi
+      sprite: _CE/Skills/General/sphere_of_light.rsi
       state: icon
   - type: TargetAction
     range: 5
@@ -85,5 +85,5 @@
 - type: alert
   id: CEGlowing
   icons:
-  - sprite: _CE/Skills/sphere_of_light.rsi
+  - sprite: _CE/Skills/General/sphere_of_light.rsi
     state: icon

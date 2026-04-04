@@ -2,6 +2,10 @@ using Content.Shared._CE.Health.Components;
 using Content.Shared.DoAfter;
 using Content.Shared.Inventory;
 using Content.Shared.Rejuvenate;
+using Content.Shared.StatusEffectNew;
+using Robust.Shared.Audio;
+using Robust.Shared.Audio.Systems;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
 namespace Content.Shared._CE.Health;
@@ -13,7 +17,11 @@ namespace Content.Shared._CE.Health;
 /// </summary>
 public abstract partial class CESharedDamageableSystem : EntitySystem
 {
+    protected static readonly SoundSpecifier CriticalHitSound = new SoundPathSpecifier("/Audio/_CE/Effects/critical.ogg");
+    private static readonly EntProtoId CriticalHitVfx = "CEEffectFocusTelegraphy";
+
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
 
     public override void Initialize()
@@ -94,8 +102,10 @@ public abstract partial class CESharedDamageableSystem : EntitySystem
     /// <summary>
     /// Applies damage specified by <see cref="CEDamageSpecifier"/>.
     /// The total damage (sum of all types) is added to the entity's accumulated damage.
+    /// When <paramref name="source"/> is set, raises <see cref="CEIsCriticalDamageEvent"/> on it;
+    /// a critical hit doubles the resulting damage.
     /// </summary>
-    public bool TakeDamage(Entity<CEDamageableComponent?> ent, CEDamageSpecifier damage, EntityUid? source = null, bool ignoreArmor = false, bool interruptDoAfters = true)
+    public bool TakeDamage(Entity<CEDamageableComponent?> ent, CEDamageSpecifier damage, EntityUid? source = null, EntityUid? weapon = null, bool ignoreArmor = false, bool interruptDoAfters = true)
     {
         if (!Resolve(ent, ref ent.Comp, false))
             return false;
@@ -120,10 +130,25 @@ public abstract partial class CESharedDamageableSystem : EntitySystem
         if (totalDamage <= 0)
             return false;
 
+        // Critical damage check
+        var isCritical = false;
+        if (source != null)
+        {
+            var critEv = new CEIsCriticalDamageEvent(ent, weapon);
+            RaiseLocalEvent(source.Value, ref critEv);
+
+            if (critEv.IsCritical)
+            {
+                totalDamage *= 2;
+                isCritical = true;
+                RaiseCriticalHitSound(ent, source.Value);
+            }
+        }
+
         ChangeDamage(ent, totalDamage, out var actualDelta, source, interruptDoAfters);
 
         if (actualDelta != 0)
-            RaiseDamageEffect(ent, source);
+            RaiseDamageEffect(ent, source, isCritical);
 
         return actualDelta != 0;
     }
@@ -166,11 +191,22 @@ public abstract partial class CESharedDamageableSystem : EntitySystem
     }
 
     /// <summary>
-    /// Raises a red color flash on the damaged entity.
-    /// Server sends via PVS (excluding source), client shows locally during prediction.
+    /// Raises visual and audio effects for damage on an entity.
+    /// Server sends via PVS, client shows locally during prediction.
     /// </summary>
-    protected virtual void RaiseDamageEffect(EntityUid target, EntityUid? source)
+    protected virtual void RaiseDamageEffect(EntityUid target, EntityUid? source, bool isCritical)
     {
+    }
+
+    /// <summary>
+    /// Plays the critical hit sound and spawns VFX on the target.
+    /// Sound uses <see cref="SharedAudioSystem.PlayPredicted(SoundSpecifier?,EntityUid,EntityUid?,AudioParams?)"/>;
+    /// VFX uses predicted spawn so the attacker sees it instantly.
+    /// </summary>
+    protected virtual void RaiseCriticalHitSound(EntityUid target, EntityUid source)
+    {
+        _audio.PlayPredicted(CriticalHitSound, Transform(target).Coordinates, source);
+        PredictedSpawnAttachedTo(CriticalHitVfx, Transform(target).Coordinates);
     }
 }
 
@@ -254,3 +290,12 @@ public sealed class CECalculateMaxHealthEvent(int baseMaxHealth) : EntityEventAr
 
     public int MaxHealth => (int)((BaseMaxHealth + FlatModifier) * Multiplier);
 }
+
+/// <summary>
+/// Raised directed on the source (attacker) entity after damage calculation but before application.
+/// Subscribers inspect target, attacker and weapon, then set <see cref="IsCritical"/> to true
+/// when the hit should become a critical strike. Critical strikes double the final damage.
+/// Relayed through status effects via <see cref="StatusEffectRelayedEvent{TEvent}"/>.
+/// </summary>
+[ByRefEvent]
+public record struct CEIsCriticalDamageEvent(EntityUid Target, EntityUid? Weapon, bool IsCritical = false);

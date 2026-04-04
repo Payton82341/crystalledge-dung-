@@ -2,7 +2,6 @@ using Content.Shared._CE.Camera;
 using Content.Shared._CE.Health;
 using Content.Shared._CE.Health.Components;
 using Content.Shared.Effects;
-using Robust.Shared.GameStates;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 
@@ -27,7 +26,7 @@ public sealed class CEDamageableSystem : CESharedDamageableSystem
         RaiseLocalEvent(uid, ev, true);
     }
 
-    protected override void RaiseDamageEffect(EntityUid target, EntityUid? source)
+    protected override void RaiseDamageEffect(EntityUid target, EntityUid? source, bool isCritical)
     {
         if (!_timing.IsFirstTimePredicted)
             return;
