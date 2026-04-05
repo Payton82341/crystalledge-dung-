@@ -386,3 +386,11 @@
   - type: Gravity
     enabled: true
     inherent: true
+
+- type: entity
+  id: CEMapEndText
+  parent: MapText
+  categories: [ ForkFiltered ]
+  components:
+  - type: MapText
+    text: "This is the end of the demo! Thanks for playing :). PvP or Suicide and respawn to new run"
