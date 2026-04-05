@@ -1,53 +1,52 @@
 - type: entity
   abstract: true
-  id: CEBaseWeaponDagger
-  categories: [ ForkFiltered ]
+  id: CEBaseWeaponSword
   parent:
-  - BaseItem
+  - CEBaseWeapon
   components:
-  - type: Item
-    size: Large
-    shape:
-    - 0, 0, 1, 1
   - type: CEWeapon
-    spriteRotation: -90
     effectSlots:
       OnHit:
       - !type:WeaponArcAttack
-        range: 0.4
+        range: 0.7
         arcWidth: 40
         effects:
         - !type:Damage
           damage:
             types:
+              Physical: 2
+        - !type:Damage
+          effectTarget: Used
+          damage:
+            types:
               Physical: 1
       OnHeavyHit:
       - !type:WeaponArcAttack
-        range: 0.5
+        range: 0.6
         arcWidth: 180
         effects:
         - !type:Damage
           damage:
             types:
+              Physical: 2
+        - !type:Damage
+          effectTarget: Used
+          damage:
+            types:
               Physical: 1
     animations:
       Primary:
-      - anim: DaggerAttackLight1
-        speed: 2
+      - anim: SwordAttackLight1
         staminaCost: 1
-      - anim: DaggerAttackLight2
-        speed: 2
+      - anim: SwordAttackLight2
         staminaCost: 1
       Secondary:
-      - anim: DaggerAttackHeavy1
-        speed: 2
+      - anim: SwordAttackHeavy1
+        speed: 1.2
         staminaCost: 1
-      - anim: DaggerAttackHeavy2
-        speed: 2
+      - anim: SwordAttackHeavy2
+        speed: 1.2
         staminaCost: 1
   - type: Clothing
     slots:
-    - belt
-    equipWhileMoving: true
-    equipDelay: 1
-    unequipDelay: 1
+    - neck

@@ -1,13 +1,10 @@
 - type: entity
   abstract: true
   id: CEBaseWeaponStaff
-  categories: [ ForkFiltered ]
-  parent: [ BaseItem ]
+  parent:
+  - CEBaseWeapon
   components:
-  - type: Item
-    size: Large
   - type: CEWeapon
-    spriteRotation: -90
     effectSlots:
       OnHit:
       - !type:WeaponArcAttack
@@ -15,6 +12,11 @@
         arcWidth: 100
         effects:
         - !type:Damage
+          damage:
+            types:
+              Physical: 2
+        - !type:Damage
+          effectTarget: Used
           damage:
             types:
               Physical: 1
@@ -26,22 +28,22 @@
         - !type:Damage
           damage:
             types:
+              Physical: 2
+        - !type:Damage
+          effectTarget: Used
+          damage:
+            types:
               Physical: 1
-      - !type:ThrowFromUser
-        distance: 1
     animations:
       Primary:
-      - anim: StaffAttackLight
+      - anim: StaffAttackLight1
         staminaCost: 1
       - anim: StaffAttackLight2
         staminaCost: 1
       Secondary:
       - anim: StaffAttackHeavy
-        staminaCost: 2
-  #- type: CEWieldedWeapon #TODO: Custom wielded animations
-  - type: Wieldable
+        staminaCost: 1
   - type: Clothing
-    slots: [ neck ]
-    equipWhileMoving: true
-    equipDelay: 1
-    unequipDelay: 1
+    slots:
+    - neck
+  - type: Wieldable

@@ -1,49 +1,48 @@
 - type: entity
   abstract: true
-  id: CEBaseWeaponSword
-  categories: [ ForkFiltered ]
+  id: CEBaseWeaponSkimitar
   parent:
-  - BaseItem
+  - CEBaseWeapon
   components:
-  - type: Item
-    size: Large
   - type: CEWeapon
-    spriteRotation: -90
     effectSlots:
       OnHit:
       - !type:WeaponArcAttack
-        range: 0.7
-        arcWidth: 40
+        range: 0.6
+        arcWidth: 60
         effects:
         - !type:Damage
           damage:
             types:
               Physical: 2
+        - !type:Damage
+          effectTarget: Used
+          damage:
+            types:
+              Physical: 1
       OnHeavyHit:
       - !type:WeaponArcAttack
         range: 0.6
-        arcWidth: 180
+        arcWidth: 360
         effects:
         - !type:Damage
           damage:
             types:
-              Physical: 2
+              Physical: 1
+        - !type:Damage
+          effectTarget: Used
+          damage:
+            types:
+              Physical: 1
     animations:
       Primary:
-      - anim: SwordAttackLight1
+      - anim: SkimitarAttackLight1
         staminaCost: 1
-      - anim: SwordAttackLight2
+      - anim: SkimitarAttackLight2
         staminaCost: 1
       Secondary:
-      - anim: SwordAttackHeavy1
-        speed: 1.2
-        staminaCost: 1
-      - anim: SwordAttackHeavy2
-        speed: 1.2
-        staminaCost: 1
+      - anim: SkimitarAttackHeavy1
+        staminaCost: 2
   - type: Clothing
     slots:
     - neck
-    equipWhileMoving: true
-    equipDelay: 1
-    unequipDelay: 1

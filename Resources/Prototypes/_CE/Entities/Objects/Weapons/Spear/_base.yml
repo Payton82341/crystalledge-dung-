@@ -1,13 +1,10 @@
 - type: entity
   abstract: true
   id: CEBaseWeaponSpear
-  categories: [ ForkFiltered ]
-  parent: [ BaseItem ]
+  parent:
+  - CEBaseWeapon
   components:
-  - type: Item
-    size: Large
   - type: CEWeapon
-    spriteRotation: -90
     effectSlots:
       OnHit:
       - !type:WeaponArcAttack
@@ -18,6 +15,11 @@
           damage:
             types:
               Physical: 2
+        - !type:Damage
+          effectTarget: Used
+          damage:
+            types:
+              Physical: 1
       OnHeavyHit:
       - !type:WeaponArcAttack
         range: 1.4
@@ -27,6 +29,11 @@
           damage:
             types:
               Physical: 4
+        - !type:Damage
+          effectTarget: Used
+          damage:
+            types:
+              Physical: 1
     animations:
       Primary:
       - anim: SpearAttackLight
@@ -44,7 +51,5 @@
   #    - anim: SpearAttackHeavy
   - type: Wieldable
   - type: Clothing
-    slots: [ neck ]
-    equipWhileMoving: true
-    equipDelay: 1
-    unequipDelay: 1
+    slots:
+    - neck
