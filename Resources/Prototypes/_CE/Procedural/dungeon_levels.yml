@@ -315,7 +315,6 @@
       weight: 1
 
 
-# Floor 3: Large final level with many rooms and cycles.
 - type: dungeonLevel
   id: MossyTemple4
   parent:
@@ -368,8 +367,8 @@
   parent:
   - BaseMossyTemplePostProcess
   name: Mossy Temple — Safe Zone
-  #exits:
-  #  default: MossyTemple1 # Loops back for now
+  exits:
+    default: MossyTemple5
   config:
     !type:CEStaticZNetworkConfig
     zMapProto: MossyTempleSafe
@@ -392,4 +391,49 @@
   categories: [ ForkFiltered ]
   components:
   - type: MapText
-    text: "This is the end of the demo! Thanks for playing :). PvP or Suicide and respawn to new run"
+    text: "This is the end of the demo! Thanks for playing :). \n The next level will be incredibly, absurdly difficult—meaning you'll most likely die."
+
+
+# Floor 3: Large final level with many rooms and cycles.
+- type: dungeonLevel
+  id: MossyTemple5
+  parent:
+  - BaseMossyTempleProcedural
+  - BaseMossyTemplePostProcess
+  name: Mossy Temple — Floor 5
+  exits:
+    default: MossyTemple5 # Loops back for now
+  config:
+    !type:CEProceduralConfig
+    generalCount:
+      min: 20
+      max: 30
+    blessingCount:
+      min: 1
+      max: 1
+    cycleCount:
+      min: 10
+      max: 10
+  postProcess:
+  # Mobs
+  - !type:CEBudgetSpawnPostProcess
+    budget: 150
+    wakeOnSpawn: true
+    excludedRoomTypes:
+    - Entrance
+    entries:
+    - proto: CESlimeWater
+      cost: 2
+      weight: 1
+    - proto: CEFlem
+      cost: 3
+      weight: 1
+    - proto: CEFlem2
+      cost: 5
+      weight: 1
+    - proto: CEFlem3
+      cost: 5
+      weight: 1
+    - proto: CESlimeFire
+      cost: 3
+      weight: 1
