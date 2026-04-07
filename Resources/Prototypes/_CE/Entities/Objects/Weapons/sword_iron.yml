@@ -1,15 +1,19 @@
 - type: entity
-  abstract: true
-  id: CEBaseWeaponSpear
+  id: CEWeaponSwordIron
   parent:
   - CEBaseWeapon
+  name: iron sword
+  description: A finely crafted sword favored by imperial officers. Its blade gleams with authority and tradition.
   components:
+  - type: Sprite
+    sprite: _CE/Objects/Weapons/Sword/iron.rsi
+    state: icon
   - type: CEWeapon
     effectSlots:
       OnHit:
       - !type:WeaponArcAttack
-        range: 1.26
-        arcWidth: 15
+        range: 0.7
+        arcWidth: 40
         effects:
         - !type:Damage
           damage:
@@ -22,13 +26,13 @@
               Physical: 1
       OnHeavyHit:
       - !type:WeaponArcAttack
-        range: 1.4
-        arcWidth: 25
+        range: 0.6
+        arcWidth: 180
         effects:
         - !type:Damage
           damage:
             types:
-              Physical: 4
+              Physical: 2
         - !type:Damage
           effectTarget: Used
           damage:
@@ -36,20 +40,17 @@
               Physical: 1
     animations:
       Primary:
-      - anim: SpearAttackLight
-        staminaCost: 2
+      - anim: SwordAttackLight1
+        staminaCost: 1
+      - anim: SwordAttackLight2
+        staminaCost: 1
       Secondary:
-      - anim: SpearAttackHeavy
-        staminaCost: 3
-      - anim: SpearAttackHeavy2
-        staminaCost: 3
-  #- type: CEWieldedWeapon #TODO: Custom wielded animations
-  #  animations:
-  #    Primary:
-  #    - anim: SpearAttackLight
-  #    Secondary:
-  #    - anim: SpearAttackHeavy
-  - type: Wieldable
+      - anim: SwordAttackHeavy1
+        speed: 1.2
+        staminaCost: 1
+      - anim: SwordAttackHeavy2
+        speed: 1.2
+        staminaCost: 1
   - type: Clothing
     slots:
     - neck

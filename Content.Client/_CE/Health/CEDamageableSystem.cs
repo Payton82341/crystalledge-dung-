@@ -7,6 +7,7 @@ using Content.Shared.Effects;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
+using Robust.Shared.GameStates;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 
@@ -22,13 +23,28 @@ public sealed class CEDamageableSystem : CESharedDamageableSystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<CEDamageableComponent, AfterAutoHandleStateEvent>(OnDamageableAfterState);
+        SubscribeLocalEvent<CEDamageableComponent, ComponentHandleState>(OnHandleState);
         Subs.ItemStatus<CEHealthStatusComponent>(ent => new CEHealthStatusControl(ent));
     }
 
-    private void OnDamageableAfterState(EntityUid uid, CEDamageableComponent comp, ref AfterAutoHandleStateEvent args)
+    /// <summary>
+    /// Applies the authoritative server state and raises <see cref="CEDamageChangedEvent"/>
+    /// for game-logic and visual systems when damage actually changed.
+    /// This fires once per state diff — server-only damage (ranged, environmental) arrives here.
+    /// </summary>
+    private void OnHandleState(EntityUid uid, CEDamageableComponent comp, ref ComponentHandleState args)
     {
-        var ev = new CEDamageChangedEvent(uid, comp.TotalDamage, comp.TotalDamage);
+        if (args.Current is not CEDamageableComponentState state)
+            return;
+
+        var oldDamage = new CEDamageSpecifier(comp.Damage);
+
+        comp.Damage = new CEDamageSpecifier(state.Damage);
+
+        if (oldDamage.Equals(comp.Damage))
+            return;
+
+        var ev = new CEDamageChangedEvent(uid, oldDamage, comp.Damage, predicted: false);
         RaiseLocalEvent(uid, ev, true);
     }
 
@@ -57,15 +73,7 @@ public sealed class CEClientMobStateSystem : EntitySystem
     {
         var stateEv = new CEMobStateChangedEvent(uid, comp.CurrentState, comp.CurrentState);
         RaiseLocalEvent(uid, stateEv, true);
-
-        var maxHealthEv = new CEMaxHealthChangedEvent(uid);
-        RaiseLocalEvent(uid, maxHealthEv, true);
     }
-}
-
-public sealed class CEMaxHealthChangedEvent(EntityUid target) : EntityEventArgs
-{
-    public readonly EntityUid Target = target;
 }
 
 public sealed class CEHealthStatusControl : Control

@@ -1,10 +1,11 @@
 using Content.Shared._CE.Health.Components;
+using Content.Shared._CE.Health.Prototypes;
 using Content.Shared.DoAfter;
 using Content.Shared.Inventory;
 using Content.Shared.Rejuvenate;
-using Content.Shared.StatusEffectNew;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
+using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
@@ -12,7 +13,7 @@ namespace Content.Shared._CE.Health;
 
 /// <summary>
 /// Manages CE damage: application, healing, damage changes.
-/// Damage is a single int that starts at 0 and increases.
+/// Damage is stored per type in <see cref="CEDamageSpecifier"/>; total is computed.
 /// Damage flows through <see cref="CEDamageCalculateEvent"/> for modification before application.
 /// </summary>
 public abstract partial class CESharedDamageableSystem : EntitySystem
@@ -29,6 +30,7 @@ public abstract partial class CESharedDamageableSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<CEDamageableComponent, RejuvenateEvent>(OnRejuvenate);
+        SubscribeLocalEvent<CEDamageableComponent, ComponentGetState>(OnGetState);
         SubscribeLocalEvent<DoAfterComponent, CEDamageChangedEvent>(OnDoAfterBreakAttempt);
     }
 
@@ -57,28 +59,104 @@ public abstract partial class CESharedDamageableSystem : EntitySystem
         SetDamage((ent, ent.Comp), 0);
     }
 
+    private void OnGetState(EntityUid uid, CEDamageableComponent comp, ref ComponentGetState args)
+    {
+        args.State = new CEDamageableComponentState
+        {
+            Damage = new CEDamageSpecifier(comp.Damage),
+        };
+    }
+
     /// <summary>
     /// Directly changes damage by a delta. Clamped to minimum 0.
     /// Positive delta = more damage, negative delta = healing.
+    /// When <paramref name="specifier"/> is provided, per-type amounts are applied.
+    /// Otherwise, all existing types are scaled proportionally.
+    /// Returns true if damage actually changed.
     /// </summary>
-    private void ChangeDamage(Entity<CEDamageableComponent?> ent, int delta, out int actualDelta, EntityUid? source = null, bool interruptDoAfters = true)
+    private bool ChangeDamage(
+        Entity<CEDamageableComponent?> ent,
+        int delta,
+        EntityUid? source = null,
+        bool interruptDoAfters = true,
+        CEDamageSpecifier? specifier = null)
     {
-        actualDelta = 0;
-
         if (!Resolve(ent, ref ent.Comp, false))
-            return;
+            return false;
 
-        var oldDamage = ent.Comp.TotalDamage;
-        var newDamage = Math.Max(0, ent.Comp.TotalDamage + delta);
+        var oldTotal = ent.Comp.Damage.Total;
+        var oldDamage = new CEDamageSpecifier(ent.Comp.Damage);
 
-        actualDelta = newDamage - oldDamage;
-        ent.Comp.TotalDamage = newDamage;
+        if (specifier != null)
+        {
+            // Typed damage: add per-type amounts from the specifier.
+            foreach (var (typeId, amount) in specifier.Types)
+            {
+                if (amount <= 0)
+                    continue;
+
+                ent.Comp.Damage.Types.TryGetValue(typeId, out var current);
+                ent.Comp.Damage.Types[typeId] = current + amount;
+            }
+        }
+        else if (delta < 0 && oldTotal > 0)
+        {
+            // Healing without specifier: just reduce types in order until healed.
+            var healLeft = Math.Min(oldTotal, -delta);
+            foreach (var key in new List<ProtoId<CEDamageTypePrototype>>(ent.Comp.Damage.Types.Keys))
+            {
+                if (healLeft <= 0)
+                    break;
+
+                var val = ent.Comp.Damage.Types[key];
+                var heal = Math.Min(healLeft, val);
+
+                if (val - heal > 0)
+                    ent.Comp.Damage.Types[key] = val - heal;
+                else
+                    ent.Comp.Damage.Types.Remove(key);
+
+                healLeft -= heal;
+            }
+        }
+        else if (delta > 0 && oldTotal > 0)
+        {
+            // Untyped damage increase (e.g. SetDamage scaling): scale types up.
+            var targetTotal = oldTotal + delta;
+            ScaleDamagePerType(ent.Comp, targetTotal, oldTotal);
+        }
+
         Dirty(ent);
 
-        if (oldDamage != newDamage)
+        if (oldDamage.Equals(ent.Comp.Damage))
+            return false;
+
+        var ev = new CEDamageChangedEvent(ent, oldDamage, ent.Comp.Damage, source, interruptDoAfters);
+        RaiseLocalEvent(ent, ev, true);
+        return true;
+    }
+
+    /// <summary>
+    /// Scales all per-type damage values so that their sum equals <paramref name="targetTotal"/>.
+    /// Clears the dictionary when target is 0.
+    /// </summary>
+    private static void ScaleDamagePerType(CEDamageableComponent comp, int targetTotal, int oldTotal)
+    {
+        if (targetTotal <= 0)
         {
-            var ev = new CEDamageChangedEvent(ent, oldDamage, newDamage, source, interruptDoAfters);
-            RaiseLocalEvent(ent, ev, true);
+            comp.Damage.Types.Clear();
+            return;
+        }
+
+        var scale = (float) targetTotal / oldTotal;
+        var keys = new List<ProtoId<CEDamageTypePrototype>>(comp.Damage.Types.Keys);
+        foreach (var key in keys)
+        {
+            var scaled = Math.Max(0, (int) MathF.Round(comp.Damage.Types[key] * scale));
+            if (scaled > 0)
+                comp.Damage.Types[key] = scaled;
+            else
+                comp.Damage.Types.Remove(key);
         }
     }
 
@@ -91,12 +169,12 @@ public abstract partial class CESharedDamageableSystem : EntitySystem
             return;
 
         var clamped = Math.Max(0, damage);
-        var delta = clamped - ent.Comp.TotalDamage;
+        var delta = clamped - ent.Comp.Damage.Total;
 
         if (delta == 0)
             return;
 
-        ChangeDamage(ent, delta, out _, interruptDoAfters: false);
+        ChangeDamage(ent, delta, interruptDoAfters: false);
     }
 
     /// <summary>
@@ -145,12 +223,20 @@ public abstract partial class CESharedDamageableSystem : EntitySystem
             }
         }
 
-        ChangeDamage(ent, totalDamage, out var actualDelta, source, interruptDoAfters);
+        // Build the final specifier reflecting armor and crit modifications.
+        CEDamageSpecifier? finalSpecifier = null;
+        if (damage.Types.Count > 0 && damage.Total > 0)
+        {
+            var ratio = totalDamage / (float) damage.Total;
+            finalSpecifier = damage * ratio;
+        }
 
-        if (actualDelta != 0)
+        var changed = ChangeDamage(ent, totalDamage, source, interruptDoAfters, finalSpecifier);
+
+        if (changed)
             RaiseDamageEffect(ent, source, isCritical);
 
-        return actualDelta != 0;
+        return changed;
     }
 
     /// <summary>
@@ -179,15 +265,7 @@ public abstract partial class CESharedDamageableSystem : EntitySystem
         if (finalAmount <= 0)
             return;
 
-        ChangeDamage(target, -finalAmount, out _, interruptDoAfters: false);
-    }
-
-    public int GetDamage(Entity<CEDamageableComponent?> target)
-    {
-        if (!Resolve(target, ref target.Comp, false))
-            return 0;
-
-        return target.Comp.TotalDamage;
+        ChangeDamage(target, -finalAmount, interruptDoAfters: false);
     }
 
     /// <summary>
@@ -203,14 +281,14 @@ public abstract partial class CESharedDamageableSystem : EntitySystem
         if (TryComp<CEMobStateComponent>(uid, out var mobState))
         {
             var maxHp = mobState.CriticalThreshold;
-            var currentHp = Math.Max(0, maxHp - damage.TotalDamage);
+            var currentHp = Math.Max(0, maxHp - damage.Damage.Total);
 
             int? destroyThreshold = null;
             int? remainingUntilDeath = null;
             if (TryComp<CEDestructibleComponent>(uid, out var destr))
             {
                 destroyThreshold = destr.DestroyThreshold;
-                remainingUntilDeath = Math.Max(0, maxHp + destr.DestroyThreshold - damage.TotalDamage);
+                remainingUntilDeath = Math.Max(0, maxHp + destr.DestroyThreshold - damage.Damage.Total);
             }
 
             return new CEHealthInfo
@@ -228,7 +306,7 @@ public abstract partial class CESharedDamageableSystem : EntitySystem
         if (TryComp<CEDestructibleComponent>(uid, out var destructible) && destructible.DestroyThreshold > 0)
         {
             var maxHp = destructible.DestroyThreshold;
-            var currentHp = Math.Max(0, maxHp - damage.TotalDamage);
+            var currentHp = Math.Max(0, maxHp - damage.Damage.Total);
 
             return new CEHealthInfo
             {
@@ -264,13 +342,21 @@ public abstract partial class CESharedDamageableSystem : EntitySystem
 
 /// <summary>
 /// Raised when damage changes on an entity.
+/// Carries per-type old and new <see cref="CEDamageSpecifier"/> snapshots.
+/// Subscribers can compute per-type deltas for colored popups via <c>.OldDamage.Types</c> / <c>.NewDamage.Types</c>.
 /// </summary>
 public sealed class CEDamageChangedEvent : EntityEventArgs
 {
     public readonly EntityUid Target;
-    public readonly int OldDamage;
-    public readonly int NewDamage;
+    public readonly CEDamageSpecifier OldDamage;
+    public readonly CEDamageSpecifier NewDamage;
     public readonly EntityUid? Source;
+
+    /// <summary>
+    /// True when the event was raised from game logic (ChangeDamage / prediction),
+    /// false when it was raised from HandleState (authoritative server correction).
+    /// </summary>
+    public readonly bool Predicted;
 
     /// <summary>
     /// Was any of the damage change dealing damage, or was it all healing?
@@ -283,15 +369,35 @@ public sealed class CEDamageChangedEvent : EntityEventArgs
     /// </summary>
     public readonly bool InterruptsDoAfters;
 
-    public int DamageDelta => NewDamage - OldDamage;
+    public int DamageDelta => NewDamage.Total - OldDamage.Total;
 
-    public CEDamageChangedEvent(EntityUid target, int oldDamage, int newDamage, EntityUid? source = null, bool interruptsDoAfters = true)
+    public CEDamageChangedEvent(
+        EntityUid target,
+        CEDamageSpecifier oldDamage,
+        CEDamageSpecifier newDamage,
+        EntityUid? source = null,
+        bool interruptsDoAfters = true,
+        bool predicted = true)
     {
         Target = target;
         OldDamage = oldDamage;
         NewDamage = newDamage;
         Source = source;
-        DamageIncreased = newDamage > oldDamage;
+        Predicted = predicted;
+
+        // True if ANY individual type increased, even if the total went down.
+        var damageIncreased = false;
+        foreach (var (typeId, newAmount) in newDamage.Types)
+        {
+            oldDamage.Types.TryGetValue(typeId, out var oldAmount);
+            if (newAmount > oldAmount)
+            {
+                damageIncreased = true;
+                break;
+            }
+        }
+
+        DamageIncreased = damageIncreased;
         InterruptsDoAfters = interruptsDoAfters && DamageIncreased;
     }
 }

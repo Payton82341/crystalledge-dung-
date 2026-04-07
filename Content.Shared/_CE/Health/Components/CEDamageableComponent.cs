@@ -1,15 +1,21 @@
 using Robust.Shared.GameStates;
+using Robust.Shared.Serialization;
 
 namespace Content.Shared._CE.Health.Components;
 
 /// <summary>
-/// Stores accumulated damage for an entity as a single integer.
-/// Damage starts at 0 and increases when the entity is hurt.
+/// Stores accumulated damage per type for an entity.
 /// </summary>
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true)]
+[RegisterComponent, NetworkedComponent]
 [Access(typeof(CESharedDamageableSystem))]
 public sealed partial class CEDamageableComponent : Component
 {
-    [DataField, AutoNetworkedField]
-    public int TotalDamage;
+    [DataField, ViewVariables]
+    public CEDamageSpecifier Damage = new();
+}
+
+[Serializable, NetSerializable]
+public sealed class CEDamageableComponentState : ComponentState
+{
+    public CEDamageSpecifier Damage = new();
 }

@@ -7,6 +7,7 @@
     - id: CEWeaponSkimitarIron
     - id: CEWeaponSpearIron
     - id: CEWeaponSwordIron
+    - id: CEWeaponHeavyClub
 
 - type: entityTable
   id: CEUncommonWeapon
@@ -14,6 +15,7 @@
     children:
     - id: CEWeaponDaggerSacrificial
     - id: CEWeaponMagicStaffHealing
+    - id: CEWeaponSwordBone
 
 - type: entityTable
   id: CERandomWeapon
