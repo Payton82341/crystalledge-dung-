@@ -26,25 +26,6 @@
         EnemyDead: true
       cost: 1
       actionPrototype: CEActionFirewall
-    # Run away from target
-    - !type:CEGOAPFleeAction
-      targetKey: enemy
-      effects:
-        EnemyVisible: false
-        EnemyInMeleeRange: false
-      cost: 1
-      fleeDistance: 15
-      visionRadius: 10
-      occlusionBonus: 2
-    # Area Healing - world target under self, use when low health
-    - !type:CEGOAPUseAction
-      targetKey: self
-      preconditions:
-        EnemyVisible: false
-      effects:
-        LowHealth: false
-      cost: 2
-      actionPrototype: CEActionSpellAreaHealing
     # Wander to a random nearby tile
     - !type:CEGOAPExploreAction
       effects:
@@ -91,25 +72,6 @@
         EnemyDead: true
       cost: 1
       actionPrototype: CEActionFrostFlow
-    # Run away from target
-    - !type:CEGOAPFleeAction
-      targetKey: enemy
-      effects:
-        EnemyVisible: false
-        EnemyInMeleeRange: false
-      cost: 1
-      fleeDistance: 15
-      visionRadius: 10
-      occlusionBonus: 2
-    # Area Healing - world target under self, use when low health
-    - !type:CEGOAPUseAction
-      targetKey: self
-      preconditions:
-        EnemyVisible: false
-      effects:
-        LowHealth: false
-      cost: 2
-      actionPrototype: CEActionSpellAreaHealing
     # Wander to a random nearby tile
     - !type:CEGOAPExploreAction
       effects:

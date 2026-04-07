@@ -16,9 +16,9 @@
   - type: CEGOAP
     goals:
     # Most important - stay alive
-    - desiredState:
-        LowHealth: false
-      priority: 4
+    #- desiredState:
+    #    LowHealth: false
+    #  priority: 4
     # Second - kill enemies
     - desiredState:
         EnemyDead: true
@@ -44,25 +44,6 @@
       cost: 1
       useType: Primary
       angleVariation: 5
-    # Run away from target
-    - !type:CEGOAPFleeAction
-      targetKey: enemy
-      effects:
-        EnemyVisible: false
-        EnemyInMeleeRange: false
-      cost: 1
-      fleeDistance: 15
-      visionRadius: 10
-      occlusionBonus: 2
-    # Area Healing - world target under self, use when low health
-    - !type:CEGOAPUseAction
-      targetKey: self
-      effects:
-        LowHealth: false
-      preconditions:
-        EnemyVisible: false
-      cost: 2
-      actionPrototype: CEActionSpellAreaHealing
     # Wander to a random nearby tile
     - !type:CEGOAPExploreAction
       effects:
