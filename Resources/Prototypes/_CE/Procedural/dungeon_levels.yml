@@ -389,9 +389,29 @@
   id: CEMapEndText
   parent: MapText
   categories: [ ForkFiltered ]
+  name: Map end text
   components:
   - type: MapText
     text: "This is the end of the demo! Thanks for playing :). \n The next level will be incredibly, absurdly difficult—meaning you'll most likely die."
+
+
+- type: entity
+  id: CEMapStartText
+  parent: MapText
+  categories: [ ForkFiltered ]
+  name: Map start text EN
+  components:
+  - type: MapText
+    text: "A maximum of 4 players can enter the portal at the same time. \nA short demo adventure awaits you, spanning 4 floors that gradually get more challenging. \nYou may randomly encounter other groups of players inside, and it’s up to you to decide whether you’re friends or foes.\nOn each level, there is 1 statue that will boost your character’s stats.\nYour goal is to reach the end and have fun!"
+
+- type: entity
+  id: CEMapStartTextRU
+  parent: MapText
+  categories: [ ForkFiltered ]
+  name: Map start text RU
+  components:
+  - type: MapText
+    text: "Максимум 4 игрока могут войти в портал одновременно. \nКороткое демо-приключение ждет вас, охватывающее 4 этажа, которые постепенно становятся более сложными. \nВы можете случайно встретить другие группы игроков внутри, и вам решать, друзья они или враги.\nНа каждом уровне есть 1 статуя, которая повысит ваши характеристики.\nВаша цель — дойти до конца и получить удовольствие!"
 
 
 # Floor 3: Large final level with many rooms and cycles.
