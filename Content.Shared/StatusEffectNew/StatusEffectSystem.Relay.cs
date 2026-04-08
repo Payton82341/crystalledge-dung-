@@ -1,3 +1,5 @@
+using System.Linq;
+using Content.Shared._CE.DivineShield;
 using Content.Shared._CE.Fire;
 using Content.Shared._CE.Frost;
 using Content.Shared._CE.Health;
@@ -32,6 +34,7 @@ public sealed partial class StatusEffectsSystem
         SubscribeLocalEvent<StatusEffectContainerComponent, CECalculateStaminaRegenEvent>(RelayStatusEffectEvent);
         SubscribeLocalEvent<StatusEffectContainerComponent, CEGetManaRestoringAmountEvent>(RelayStatusEffectEvent);
         SubscribeLocalEvent<StatusEffectContainerComponent, CEGetManaRestoreAmountEvent>(RelayStatusEffectEvent);
+        SubscribeLocalEvent<StatusEffectContainerComponent, CEDivineShieldBrokenEvent>(RelayStatusEffectEvent);
         SubscribeLocalEvent<StatusEffectContainerComponent, CEFreezeEntityAttemptEvent>(RefRelayStatusEffectEvent);
         SubscribeLocalEvent<StatusEffectContainerComponent, CEIgniteEntityAttemptEvent>(RefRelayStatusEffectEvent);
         SubscribeLocalEvent<StatusEffectContainerComponent, CEIsCriticalDamageEvent>(RefRelayStatusEffectEvent);
@@ -73,8 +76,16 @@ public sealed partial class StatusEffectsSystem
     {
         // this copies the by-ref event if it is a struct
         var ev = new StatusEffectRelayedEvent<T>(args);
-        foreach (var activeEffect in statusEffect.Comp.ActiveStatusEffects?.ContainedEntities ?? [])
+        // CrystallEdge:  Snapshot the list: handlers may add/remove status effects during iteration.
+        var effects = statusEffect.Comp.ActiveStatusEffects?.ContainedEntities;
+        if (effects is null)
+            return;
+
+        foreach (var activeEffect in effects.ToArray())
         {
+            if (!Exists(activeEffect))
+                continue;
+
             RaiseLocalEvent(activeEffect, ref ev);
         }
         // and now we copy it back
@@ -85,8 +96,16 @@ public sealed partial class StatusEffectsSystem
     {
         // this copies the by-ref event if it is a struct
         var ev = new StatusEffectRelayedEvent<T>(args);
-        foreach (var activeEffect in statusEffect.Comp.ActiveStatusEffects?.ContainedEntities ?? [])
+        // CrystallEdge: Snapshot the list: handlers may add/remove status effects during iteration.
+        var effects = statusEffect.Comp.ActiveStatusEffects?.ContainedEntities;
+        if (effects is null)
+            return;
+
+        foreach (var activeEffect in effects.ToArray())
         {
+            if (!Exists(activeEffect))
+                continue;
+
             RaiseLocalEvent(activeEffect, ref ev);
         }
     }
