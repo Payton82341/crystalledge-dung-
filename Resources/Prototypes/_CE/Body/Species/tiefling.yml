@@ -1,5 +1,5 @@
 - type: markingsGroup
-  id: CEHuman
+  id: CETiefling
   limits:
     enum.HumanoidVisualLayers.Hair:
       limit: 1
@@ -9,7 +9,7 @@
       limit: 1
       required: false
     enum.HumanoidVisualLayers.Chest:
-      limit: 2
+      limit: 1
       required: false
     enum.HumanoidVisualLayers.Snout:
       limit: 1
@@ -39,15 +39,22 @@
       limit: 1
       required: false
     enum.HumanoidVisualLayers.Tail:
-      limit: 0
-      required: false
+      limit: 1
+      required: true
+      onlyGroupWhitelisted: true
+      default: [ CETieflingTail ]
+    enum.HumanoidVisualLayers.HeadTop:
+      limit: 1
+      required: true
+      onlyGroupWhitelisted: true
+      default: [ CETieflingHorns ]
     enum.HumanoidVisualLayers.Special:
       limit: 0
       required: false
 
 - type: entity
   parent: BaseSpeciesAppearance
-  id: CEAppearanceHuman
+  id: CEAppearanceTiefling
   categories: [ ForkFiltered, HideSpawnMenu ]
   components:
   - type: Inventory
@@ -92,55 +99,58 @@
             state: female_neck
   - type: InitialBody
     organs:
-      Torso: CEOrganHumanTorso
-      Head: CEOrganHumanHead
-      ArmLeft: CEOrganHumanArmLeft
-      ArmRight: CEOrganHumanArmRight
-      HandRight: CEOrganHumanHandRight
-      HandLeft: CEOrganHumanHandLeft
-      LegLeft: CEOrganHumanLegLeft
-      LegRight: CEOrganHumanLegRight
-      FootLeft: CEOrganHumanFootLeft
-      FootRight: CEOrganHumanFootRight
-      Eyes: CEOrganHumanEyes
+      Torso: CEOrganTieflingTorso
+      Head: CEOrganTieflingHead
+      ArmLeft: CEOrganTieflingArmLeft
+      ArmRight: CEOrganTieflingArmRight
+      HandRight: CEOrganTieflingHandRight
+      HandLeft: CEOrganTieflingHandLeft
+      LegLeft: CEOrganTieflingLegLeft
+      LegRight: CEOrganTieflingLegRight
+      FootLeft: CEOrganTieflingFootLeft
+      FootRight: CEOrganTieflingFootRight
+      Eyes: CEOrganTieflingEyes
   - type: HumanoidProfile
-    species: CEHuman
+    species: CETiefling
 
 - type: entity
   parent:
-  - CEAppearanceHuman
+  - CEAppearanceTiefling
   - CEBaseSpeciesMob
-  id: CEMobHuman
-  name: Mr. Human
+  id: CEMobTiefling
+  name: Mr. Tiefling
+  components:
+  - type: Wagging
 
+# Base tiefling organ
 - type: entity
   parent: OrganBase
-  id: CEOrganHuman
+  id: CEOrganTiefling
   categories: [ ForkFiltered ]
   abstract: true
-  suffix: human
+  suffix: tiefling
 
 - type: entity
-  parent: CEOrganHuman
-  id: CEOrganHumanExternal
+  parent: CEOrganTiefling
+  id: CEOrganTieflingExternal
   abstract: true
   components:
   - type: Sprite
-    sprite: _CE/Mobs/Species/Human/parts.rsi
+    sprite: _CE/Mobs/Species/Tiefling/parts.rsi
   - type: VisualOrgan
     data:
-      sprite: _CE/Mobs/Species/Human/parts.rsi
+      sprite: _CE/Mobs/Species/Tiefling/parts.rsi
   - type: VisualOrganMarkings
     markingData:
-      group: CEHuman
+      group: CETiefling
 
 - type: entity
-  parent: [ CEOrganBaseTorsoSexed, OrganBaseTorso, CEOrganHumanExternal ]
-  id: CEOrganHumanTorso
+  parent: [ CEOrganBaseTorsoSexed, OrganBaseTorso, CEOrganTieflingExternal ]
+  id: CEOrganTieflingTorso
 
 - type: entity
-  parent: [ CEOrganBaseHeadSexed, OrganBaseHead, CEOrganHumanExternal ]
-  id: CEOrganHumanHead
+  parent: [ CEOrganBaseHeadSexed, OrganBaseHead, CEOrganTieflingExternal ]
+  id: CEOrganTieflingHead
   components:
   - type: VisualOrganMarkings
     hideableLayers:
@@ -148,40 +158,40 @@
     - enum.HumanoidVisualLayers.Snout
 
 - type: entity
-  parent: [ CEOrganBaseArmLeftSexed, OrganBaseArmLeft, CEOrganHumanExternal ]
-  id: CEOrganHumanArmLeft
+  parent: [ CEOrganBaseArmLeftSexed, OrganBaseArmLeft, CEOrganTieflingExternal ]
+  id: CEOrganTieflingArmLeft
 
 - type: entity
-  parent: [ CEOrganBaseArmRightSexed, OrganBaseArmRight, CEOrganHumanExternal ]
-  id: CEOrganHumanArmRight
+  parent: [ CEOrganBaseArmRightSexed, OrganBaseArmRight, CEOrganTieflingExternal ]
+  id: CEOrganTieflingArmRight
 
 - type: entity
-  parent: [ CEOrganBaseHandLeftSexed, OrganBaseHandLeft, CEOrganHumanExternal ]
-  id: CEOrganHumanHandLeft
+  parent: [ CEOrganBaseHandLeftSexed, OrganBaseHandLeft, CEOrganTieflingExternal ]
+  id: CEOrganTieflingHandLeft
 
 - type: entity
-  parent: [ CEOrganBaseHandRightSexed, OrganBaseHandRight, CEOrganHumanExternal ]
-  id: CEOrganHumanHandRight
+  parent: [ CEOrganBaseHandRightSexed, OrganBaseHandRight, CEOrganTieflingExternal ]
+  id: CEOrganTieflingHandRight
 
 - type: entity
-  parent: [ CEOrganBaseLegLeftSexed, OrganBaseLegLeft, CEOrganHumanExternal ]
-  id: CEOrganHumanLegLeft
+  parent: [ CEOrganBaseLegLeftSexed, OrganBaseLegLeft, CEOrganTieflingExternal ]
+  id: CEOrganTieflingLegLeft
 
 - type: entity
-  parent: [ CEOrganBaseLegRightSexed, OrganBaseLegRight, CEOrganHumanExternal ]
-  id: CEOrganHumanLegRight
+  parent: [ CEOrganBaseLegRightSexed, OrganBaseLegRight, CEOrganTieflingExternal ]
+  id: CEOrganTieflingLegRight
 
 - type: entity
-  parent: [ CEOrganBaseFootLeftSexed, OrganBaseFootLeft, CEOrganHumanExternal ]
-  id: CEOrganHumanFootLeft
+  parent: [ CEOrganBaseFootLeftSexed, OrganBaseFootLeft, CEOrganTieflingExternal ]
+  id: CEOrganTieflingFootLeft
 
 - type: entity
-  parent: [ CEOrganBaseFootRightSexed, OrganBaseFootRight, CEOrganHumanExternal ]
-  id: CEOrganHumanFootRight
+  parent: [ CEOrganBaseFootRightSexed, OrganBaseFootRight, CEOrganTieflingExternal ]
+  id: CEOrganTieflingFootRight
 
 - type: entity
-  parent: [ OrganBaseEyes, OrganHumanInternal, CEOrganHumanExternal ]
-  id: CEOrganHumanEyes
+  parent: [ OrganBaseEyes, OrganHumanInternal, CEOrganTieflingExternal ]
+  id: CEOrganTieflingEyes
   components:
   - type: VisualOrgan
     data:
