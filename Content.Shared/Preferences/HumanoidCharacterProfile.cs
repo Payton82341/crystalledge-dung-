@@ -98,7 +98,7 @@ namespace Content.Shared.Preferences
 
         // CrystallEdge: bark voice profile and pitch
         [DataField]
-        public ProtoId<CEBarkSpeechPrototype> BarkVoice { get; set; } = "Baritone";
+        public ProtoId<CEBarkSpeechPrototype> BarkVoice { get; set; } = "Ed";
 
         [DataField]
         public float BarkPitch { get; set; } = 1.0f;
@@ -639,12 +639,12 @@ namespace Content.Shared.Preferences
 
             // CrystallEdge: validate bark voice and pitch
             if (!prototypeManager.HasIndex(BarkVoice))
-                BarkVoice = "Baritone";
+                BarkVoice = "Ed";
 
             if (BarkPitch <= 0f)
                 BarkPitch = 1.0f;
 
-            BarkPitch = Math.Clamp(BarkPitch, 0.5f, 2.0f);
+            BarkPitch = Math.Clamp(BarkPitch, 0.75f, 1.5f);
             // CrystallEdge end
 
             _jobPriorities.Clear();
