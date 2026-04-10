@@ -24,6 +24,16 @@ public sealed class CEBarkSpeechSystem : CESharedBarkSpeechSystem
         SubscribeLocalEvent<CEBarkSpeechComponent, EntitySpokeEvent>(OnEntitySpoke);
     }
 
+    /// <summary>
+    /// Volume reduction in dB applied to bark sounds when whispering.
+    /// </summary>
+    private const float WhisperVolumeReduction = -3f;
+
+    /// <summary>
+    /// Pitch reduction applied to bark sounds when whispering.
+    /// </summary>
+    private const float WhisperPitchReduction = -0.3f;
+
     private void OnEntitySpoke(EntityUid uid, CEBarkSpeechComponent comp, EntitySpokeEvent args)
     {
         var message = StripMarkup(args.Message);
@@ -33,9 +43,26 @@ public sealed class CEBarkSpeechSystem : CESharedBarkSpeechSystem
         if (!_proto.TryIndex(comp.BarkSpeech, out var profile))
             return;
 
+        var isWhisper = args.ObfuscatedMessage != null;
+
         var syllables = BuildSyllables(message, comp.BasePitch, profile);
         if (syllables.Count == 0)
             return;
+
+        // Reduce volume and pitch for whispers so they sound distinctly quieter and lower.
+        if (isWhisper)
+        {
+            for (var i = 0; i < syllables.Count; i++)
+            {
+                var s = syllables[i];
+                if (!s.IsPause)
+                {
+                    s.AudioParams = s.AudioParams.WithVolume(s.AudioParams.Volume + WhisperVolumeReduction);
+                    s.Pitch += WhisperPitchReduction;
+                    syllables[i] = s;
+                }
+            }
+        }
 
         _activeBarks[uid] = new BarkSequence
         {
