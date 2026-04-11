@@ -1,5 +1,3 @@
-# Bark speech voice profiles for Animal Crossing-style syllable playback.
-
 - type: barkSpeech
   id: Ed
   saySound:
@@ -12,7 +10,6 @@
   charsPerSyllable: 2
   audioParams:
     volume: 12
-    rolloffFactor: 4.5
 
 - type: barkSpeech
   id: Ezik
@@ -26,7 +23,6 @@
   charsPerSyllable: 2
   audioParams:
     volume: 18
-    rolloffFactor: 4.5
 
 - type: barkSpeech
   id: Angel
@@ -40,7 +36,6 @@
   charsPerSyllable: 2
   audioParams:
     volume: 18
-    rolloffFactor: 4.5
 
 - type: barkSpeech
   id: Mirinda
@@ -54,7 +49,6 @@
   charsPerSyllable: 2
   audioParams:
     volume: 18
-    rolloffFactor: 4.5
 
 - type: barkSpeech
   id: Straymer
@@ -68,7 +62,6 @@
   charsPerSyllable: 2
   audioParams:
     volume: 18
-    rolloffFactor: 4.5
 
 - type: barkSpeech
   id: Stepa
@@ -82,7 +75,6 @@
   charsPerSyllable: 2
   audioParams:
     volume: 18
-    rolloffFactor: 4.5
 
 - type: barkSpeech
   id: Nimfar
@@ -96,7 +88,6 @@
   charsPerSyllable: 2
   audioParams:
     volume: 18
-    rolloffFactor: 4.5
 
 - type: barkSpeech
   id: Jaba
@@ -110,7 +101,6 @@
   charsPerSyllable: 2
   audioParams:
     volume: -5
-    rolloffFactor: 4.5
 
 - type: barkSpeech
   id: Altnight
@@ -124,10 +114,9 @@
   charsPerSyllable: 2
   audioParams:
     volume: 4
-    rolloffFactor: 4.5
 
 - type: barkSpeech
-  id: Eglow
+  id: 4g10w
   saySound:
     path: /Audio/_CE/Voice/eglow.ogg
   askSound:
@@ -138,10 +127,9 @@
   charsPerSyllable: 2
   audioParams:
     volume: -8
-    rolloffFactor: 4.5
 
 - type: barkSpeech
-  id: Eglow2
+  id: 4g10w_2
   saySound:
     path: /Audio/_CE/Voice/eglow2.ogg
   askSound:
@@ -152,10 +140,9 @@
   charsPerSyllable: 2
   audioParams:
     volume: 10
-    rolloffFactor: 4.5
 
 - type: barkSpeech
-  id: Eglow3
+  id: 4g10w_3
   saySound:
     collection: eglowLaugh
   askSound:
@@ -166,7 +153,6 @@
   charsPerSyllable: 2
   audioParams:
     volume: 10
-    rolloffFactor: 4.5
 
 - type: soundCollection
   id: eglowLaugh
@@ -176,7 +162,6 @@
   - /Audio/_CE/Voice/eglow3_3.ogg
   - /Audio/_CE/Voice/eglow3_4.ogg
   - /Audio/_CE/Voice/eglow3_5.ogg
-
 
 - type: barkSpeech
   id: Shishka
@@ -190,7 +175,6 @@
   charsPerSyllable: 2
   audioParams:
     volume: 10
-    rolloffFactor: 4.5
 
 - type: barkSpeech
   id: Nimfar2
@@ -204,4 +188,29 @@
   charsPerSyllable: 2
   audioParams:
     volume: 10
-    rolloffFactor: 4.5
+
+- type: barkSpeech
+  id: Dantanat
+  saySound:
+    path: /Audio/_CE/Voice/dantanat.ogg
+  askSound:
+    path: /Audio/_CE/Voice/dantanat_a.ogg
+  exclaimSound:
+    path: /Audio/_CE/Voice/dantanat_e.ogg
+  syllableInterval: 0.08
+  charsPerSyllable: 2
+  audioParams:
+    volume: 10
+
+- type: barkSpeech
+  id: Omsoyk
+  saySound:
+    path: /Audio/_CE/Voice/omsoyk.ogg
+  askSound:
+    path: /Audio/_CE/Voice/omsoyk_a.ogg
+  exclaimSound:
+    path: /Audio/_CE/Voice/omsoyk.ogg
+  syllableInterval: 0.1
+  charsPerSyllable: 2
+  audioParams:
+    volume: 10
