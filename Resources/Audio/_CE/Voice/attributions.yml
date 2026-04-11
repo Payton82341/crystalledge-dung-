@@ -124,3 +124,8 @@
   license: "All rights reserved"
   copyright: "Voice recorded by Dinazewwr"
   source: "https://github.com/crystallpunk-14/crystalledge"
+
+- files: ["kazne.ogg", "kazne_e.ogg", "kazne_a.ogg"]
+  license: "All rights reserved"
+  copyright: "Voice recorded by Kazne"
+  source: "https://github.com/crystallpunk-14/crystalledge"
