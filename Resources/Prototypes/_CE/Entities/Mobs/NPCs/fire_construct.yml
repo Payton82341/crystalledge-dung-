@@ -95,7 +95,7 @@
   - type: CEArmor
     flat:
       Fire: 100
-      Physical: 2
+      Physical: 1
   - type: FootstepModifier
     footstepSoundCollection:
       collection: FootstepThud
