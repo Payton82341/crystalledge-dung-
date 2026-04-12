@@ -1,33 +1,34 @@
 - type: entity
-  id: CEStatusEffectWet
-  name: Wet
-  description: Soaked with water. Fire has no power here.
+  id: CEStatusEffectFrostbite
+  name: Frostbite
+  description: Increases incoming cold damage.
   components:
   - type: StatusEffect
     whitelist:
       components:
-      - CEWettable
-  - type: StatusEffectAlert
-    alert: CEWet
+      - CEDamageable
   - type: RejuvenateRemovedStatusEffect
+  - type: StatusEffectAlert
+    alert: CEFrostbite
+  - type: CEDamageVulnerabilityStatusEffect
+    extraDamagePerStack: 1
+    affectedTypes:
+    - Cold
   - type: Sprite
     drawdepth: Effects
-    sprite: _CE/Effects/water_status.rsi
     noRot: true
-    layers:
-    - state: effect
 
 - type: alert
-  id: CEWet
-  alertViewEntity: CEWetAlertSpriteView
-  name: ce-alert-wet-name
-  description: ce-alert-wet-desc
+  id: CEFrostbite
+  alertViewEntity: CEFrostbiteAlertSpriteView
+  name: ce-alert-frostbite-name
+  description: ce-alert-frostbite-desc
   icons:
-  - sprite: _CE/Interface/water.rsi
-    state: water
+  - sprite: _CE/Interface/vulnerability.rsi
+    state: frost
 
 - type: entity
-  id: CEWetAlertSpriteView
+  id: CEFrostbiteAlertSpriteView
   categories: [ HideSpawnMenu ]
   components:
   - type: GenericCounterAlert
@@ -36,8 +37,8 @@
   - type: Sprite
     sprite: /Textures/Interface/Alerts/essence_counter.rsi
     layers:
-    - sprite: _CE/Interface/water.rsi
-      state: water
+    - sprite: _CE/Interface/vulnerability.rsi
+      state: frost
     - map: [ "1" ]
       offset: 0.65, 0
     - map: [ "10" ]

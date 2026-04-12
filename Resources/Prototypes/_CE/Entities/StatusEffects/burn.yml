@@ -1,33 +1,34 @@
 - type: entity
-  id: CEStatusEffectWet
-  name: Wet
-  description: Soaked with water. Fire has no power here.
+  id: CEStatusEffectBurn
+  name: Burn
+  description: Increases incoming fire damage.
   components:
   - type: StatusEffect
     whitelist:
       components:
-      - CEWettable
-  - type: StatusEffectAlert
-    alert: CEWet
+      - CEDamageable
   - type: RejuvenateRemovedStatusEffect
+  - type: StatusEffectAlert
+    alert: CEBurn
+  - type: CEDamageVulnerabilityStatusEffect
+    extraDamagePerStack: 1
+    affectedTypes:
+    - Fire
   - type: Sprite
     drawdepth: Effects
-    sprite: _CE/Effects/water_status.rsi
     noRot: true
-    layers:
-    - state: effect
 
 - type: alert
-  id: CEWet
-  alertViewEntity: CEWetAlertSpriteView
-  name: ce-alert-wet-name
-  description: ce-alert-wet-desc
+  id: CEBurn
+  alertViewEntity: CEBurnAlertSpriteView
+  name: ce-alert-burn-name
+  description: ce-alert-burn-desc
   icons:
-  - sprite: _CE/Interface/water.rsi
-    state: water
+  - sprite: _CE/Interface/vulnerability.rsi
+    state: fire
 
 - type: entity
-  id: CEWetAlertSpriteView
+  id: CEBurnAlertSpriteView
   categories: [ HideSpawnMenu ]
   components:
   - type: GenericCounterAlert
@@ -36,8 +37,8 @@
   - type: Sprite
     sprite: /Textures/Interface/Alerts/essence_counter.rsi
     layers:
-    - sprite: _CE/Interface/water.rsi
-      state: water
+    - sprite: _CE/Interface/vulnerability.rsi
+      state: fire
     - map: [ "1" ]
       offset: 0.65, 0
     - map: [ "10" ]
