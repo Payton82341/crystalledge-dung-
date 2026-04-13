@@ -13,6 +13,9 @@
   name: Iron Bulwark
   description: Grants [color=#b2e3eb]40 temporary physical shields[/color] that absorb damage. Shields decay over time.
   components:
+  - type: Sprite
+    sprite: _CE/Skills/Knight/iron_bulwark.rsi
+    state: icon
   - type: CEActionManaCost
     manaCost: 2
   - type: Action
@@ -22,10 +25,10 @@
       state: icon
   - type: InstantAction
     event: !type:CEInstantActionAnimationEvent
-      animation: AnimationIronBulwark
+      animation: IronBulwark
 
 - type: entityEffectAnimation
-  id: AnimationIronBulwark
+  id: IronBulwark
   movementSpeed: 0.5
   duration: 1
   events:
