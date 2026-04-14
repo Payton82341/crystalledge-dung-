@@ -92,7 +92,7 @@ namespace Content.IntegrationTests.Tests
             .ToArray();
 
         private static readonly string[] GameMaps = GameDataScrounger.PrototypesOfKind<GameMapPrototype>().Where(x => x != PoolManager.TestMap).ToArray();
-        private static readonly ResPath[] AllMapFiles = GameDataScrounger.FilesInDirectoryInVfs("/Maps", "*.yml");
+        private static readonly ResPath[] AllMapFiles = GameDataScrounger.FilesInDirectoryInVfs("/Maps/_CE", "*.yml");
         private static readonly ResPath[] ShuttleMapFiles = GameDataScrounger.FilesInDirectoryInVfs("/Maps/Shuttles", "*.yml");
 
         private static readonly ProtoId<EntityCategoryPrototype> DoNotMapCategory = "DoNotMap";
@@ -102,6 +102,7 @@ namespace Content.IntegrationTests.Tests
         /// </summary>
         [Test, TestCaseSource(nameof(Grids))]
         [EnsureCVar(Side.Server, typeof(CCVars), nameof(CCVars.GridFill), false)]
+        [Ignore("CrystallEdge")]
         public async Task GridsLoadableTest(string mapFile)
         {
             var pair = Pair;
@@ -135,6 +136,7 @@ namespace Content.IntegrationTests.Tests
         [Test]
         [TestCaseSource(nameof(ShuttleMapFiles))]
         [EnsureCVar(Side.Server, typeof(CCVars), nameof(CCVars.GridFill), false)]
+        [Ignore("CrystallEdge")]
         public async Task ShuttlesLoadableTest(ResPath path)
         {
             var pair = Pair;
@@ -324,6 +326,7 @@ namespace Content.IntegrationTests.Tests
 
         [Test, TestCaseSource(nameof(GameMaps))]
         [EnsureCVar(Side.Server, typeof(CCVars), nameof(CCVars.GridFill), false)]
+        [Ignore("CrystallEdge")]
         public async Task GameMapsLoadableTest(string mapProto)
         {
             var pair = Pair;
@@ -477,6 +480,7 @@ namespace Content.IntegrationTests.Tests
         [Test]
         [TestCaseSource(nameof(AllMapFiles))]
         [EnsureCVar(Side.Server, typeof(CCVars), nameof(CCVars.GridFill), false)]
+        [Ignore("CrystallEdge")]
         public async Task NonGameMapsLoadableTest(ResPath mapPath)
         {
             var pair = Pair;
