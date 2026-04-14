@@ -137,6 +137,7 @@ public sealed partial class EntityStorageComponent : Component, IGasMixtureHolde
         [
             "MobState",
             "Item",
+            "CEMobState", //CrystallEdge
         ],
     };
 
