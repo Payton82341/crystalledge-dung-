@@ -318,7 +318,7 @@ public sealed partial class CEAttackUsingEvent(EntityUid user, List<EntityUid> t
 /// <summary>
 /// Raised on attacked entity when it gets hit by a CEMeleeWeaponComponent attack.
 /// </summary>
-public sealed partial class CEAttackedEvent(EntityUid attacker, EntityUid weapon)
+public sealed partial class CEAttackedEvent(EntityUid attacker, EntityUid weapon) : EntityEventArgs
 {
     public EntityUid Attacker = attacker;
     public EntityUid Weapon = weapon;
@@ -327,7 +327,7 @@ public sealed partial class CEAttackedEvent(EntityUid attacker, EntityUid weapon
 /// <summary>
 /// Raised on attacker, after it attacks something with a CEMeleeWeaponComponent
 /// </summary>
-public sealed partial class CEAfterAttackEvent(EntityUid weapon, List<EntityUid> targets)
+public sealed partial class CEAfterAttackEvent(EntityUid weapon, List<EntityUid> targets) : EntityEventArgs
 {
     public EntityUid Weapon = weapon;
     public List<EntityUid> Targets = targets;
