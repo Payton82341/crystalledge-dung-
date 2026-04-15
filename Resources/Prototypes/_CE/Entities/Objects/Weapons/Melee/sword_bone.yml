@@ -1,7 +1,6 @@
 - type: entity
   id: CEWeaponSwordBone
-  parent:
-  - CEBaseWeapon
+  parent: [CEBaseWeapon, CEBaseWeaponDestructible]
   name: bone sword
   description: Nicks on the blade leave bruise wounds, increasing the damage dealt to the target
   components:
@@ -9,7 +8,7 @@
     sprite: _CE/Objects/Weapons/Sword/bone.rsi
     state: icon
   - type: CEDestructible
-    destroyThreshold: 40
+    destroyThreshold: 50
   - type: CEWeapon
     effectSlots:
       OnHit:
@@ -51,13 +50,14 @@
     animations:
       Primary:
       - anim: SwordAttackLight1
-        staminaCost: 1
       - anim: SwordAttackLight2
-        staminaCost: 1
       Secondary:
       - anim: SpearAttackHeavy2
         speed: 1.2
-        staminaCost: 2
+  - type: CEWeaponStaminaCost
+    costs:
+      Primary: 1
+      Secondary: 2
   - type: Clothing
     slots:
     - neck
