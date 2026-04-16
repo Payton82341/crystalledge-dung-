@@ -4,7 +4,7 @@
   - CEConsumablePotionBase
   - CEPotionCube
   name: Fire slime core
-  description: A pulsating core from a slime. It heats the surrounding air but is cool to the touch
+  description: A pulsating core from a slime. It heats the surrounding air but is cool to the touch. It seems fragile.
   components:
   - type: Sprite
     layers:
