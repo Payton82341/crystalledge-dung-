@@ -2,7 +2,7 @@
   id: CEConsumableSlimeCoreFire
   parent:
   - CEConsumableFoodBase
-  - CESlimeCore
+  - CESlimeCoreBase
   name: Fire slime core
   description: A pulsating core from a slime. It heats the surrounding air but is cool to the touch. It seems fragile.
   components:
@@ -15,6 +15,7 @@
     - !type:AddTempShield
       amount: 10
       damageType: Fire
+      #TODO remove later once more mana sources are added
     - !type:RestoreMana
       amount: 3
   - type: CEDestructionEffect
@@ -34,4 +35,4 @@
       - CEEffectAreaHealingEffect
   - type: CEDestructible
 
-#TODO remove later once more mana sources are added
+
