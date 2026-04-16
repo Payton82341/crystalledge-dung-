@@ -4,7 +4,7 @@
   - CEConsumableFoodBase
   - CESlimeCore
   name: Water slime core
-  description: A pulsating core from a slime. It cools the surrounding air yet it's warm to the touch. It seems fragile.
+  description: A pulsating core from a slime. It humidifies the surrounding air. It seems fragile.
   components:
   - type: Sprite
     layers:
@@ -12,11 +12,12 @@
       color: "#00ccff"
   - type: CEConsumable
     effects:
-    - !type:AddTempShield
-      amount: 10
-      damageType: Cold
     - !type:RestoreMana
       amount: 3
+    - !type:WetArea
+      radius: 1
+      maxStacks: 10
+      fallOffFactor: 0.5
   - type: CEDestructionEffect
     effects:
     - !type:AreaEffect
@@ -25,11 +26,14 @@
         components:
         - CEMobState
       effects:
-      - !type:AddTempShield
-        amount: 10
-        damageType: Cold
+      - !type:WetArea
+      radius: 3
+      maxStacks: 10
+      fallOffFactor: 0.5
     - !type:SpawnEntity
       effectTarget: User
       spawns:
       - CEEffectAreaHealingEffect
   - type: CEDestructible
+
+  #TODO remove later once more mana sources are added
