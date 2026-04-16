@@ -1,5 +1,5 @@
 - type: entity
-  id: CEConsumableSlimeCoreFire
+  id: CEConsumableSlimeCoreWater
   parent:
   - CEConsumableFoodBase
   - CESlimeCore
@@ -10,7 +10,7 @@
     layers:
     - state: icon
     - state: fill
-      color: "#dfad57"
+      color: "#00ccff"
   - type: CEConsumable
     effects:
     - !type:AddTempShield
