@@ -138,3 +138,5 @@
   - type: Sprite
     sprite: _CE/Objects/Consumable/Cores/slimecore.rsi
   - type: CEConsumable
+    layers:
+    - state: icon
