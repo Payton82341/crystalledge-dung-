@@ -8,7 +8,7 @@
   components:
   - type: Sprite
     layers:
-    - state: slimecore_placeholder
+    - state: base1
       color: "#dfad57"
   - type: CEConsumable
     effects:
