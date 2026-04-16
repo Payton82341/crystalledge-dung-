@@ -1,0 +1,36 @@
+- type: entity
+  id: CEConsumableSlimeCoreFire
+  parent:
+  - CEConsumablePotionBase
+  - CEPotionCube
+  name: Fire slime core
+  description: A pulsating core from a slime. It heats the surrounding air but is cool to the touch
+  components:
+  - type: Sprite
+    layers:
+    - state: icon
+    - state: fill
+      color: "#dfad57"
+  - type: CEConsumable
+    effects:
+    - !type:AddTempShield
+      amount: 10
+      damageType: Fire
+    - !type:RestoreMana
+      amount: 3
+  - type: CEDestructionEffect
+    effects:
+    - !type:AreaEffect
+      range: 1
+      whitelist:
+        components:
+        - CEMobState
+      effects:
+      - !type:AddTempShield
+        amount: 15
+        damageType: Fire
+    - !type:SpawnEntity
+      effectTarget: User
+      spawns:
+      - CEEffectAreaHealingEffect
+  - type: CEDestructible
