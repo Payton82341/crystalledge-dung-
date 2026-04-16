@@ -157,7 +157,7 @@
 
 #slimecores
 - type: entity
-  id: CESlimeCore
+  id: CESlimeCoreBase
   abstract: true
   components:
   - type: Sprite
