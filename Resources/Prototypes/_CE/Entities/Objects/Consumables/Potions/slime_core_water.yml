@@ -1,8 +1,8 @@
 - type: entity
   id: CEConsumableSlimeCoreFire
   parent:
-  - CEConsumablePotionBase
-  - CEPotionCube
+  - CEConsumableFoodBase
+  - CESlimeCore
   name: Water slime core
   description: A pulsating core from a slime. It cools the surrounding air yet it's warm to the touch. It seems fragile.
   components:
