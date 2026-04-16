@@ -1,1 +1,36 @@
-workin
+- type: entity
+  id: CEConsumableSlimeCoreFire
+  parent:
+  - CEConsumablePotionBase
+  - CEPotionCube
+  name: Water slime core
+  description: A pulsating core from a slime. It cools the surrounding air yet it's warm to the touch. It seems fragile.
+  components:
+  - type: Sprite
+    layers:
+    - state: icon
+    - state: fill
+      color: "#dfad57"
+  - type: CEConsumable
+    effects:
+    - !type:AddTempShield
+      amount: 10
+      damageType: cold
+    - !type:RestoreMana
+      amount: 3
+  - type: CEDestructionEffect
+    effects:
+    - !type:AreaEffect
+      range: 1
+      whitelist:
+        components:
+        - CEMobState
+      effects:
+      - !type:AddTempShield
+        amount: 10
+        damageType: Cold
+    - !type:SpawnEntity
+      effectTarget: User
+      spawns:
+      - CEEffectAreaHealingEffect
+  - type: CEDestructible
