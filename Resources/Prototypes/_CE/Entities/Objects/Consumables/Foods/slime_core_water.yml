@@ -26,8 +26,5 @@
      fallOffFactor: 0.5
     - !type:SpawnEntity
       effectTarget: User
-      spawns:
-      - CEEffectAreaHealingEffect
-  - type: CEDestructible
-
+      
   #TODO remove later once more mana sources are added
