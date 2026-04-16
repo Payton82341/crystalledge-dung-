@@ -12,6 +12,7 @@
       color: "#00ccff"
   - type: CEConsumable
     effects:
+    #TODO remove later once more mana sources are added
     - !type:RestoreMana
       amount: 3
     - !type:WetArea
@@ -26,5 +27,3 @@
      fallOffFactor: 0.5
     - !type:SpawnEntity
       effectTarget: User
-      
-  #TODO remove later once more mana sources are added
