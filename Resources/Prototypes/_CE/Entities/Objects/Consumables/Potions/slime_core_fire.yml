@@ -33,3 +33,5 @@
       spawns:
       - CEEffectAreaHealingEffect
   - type: CEDestructible
+
+#TODO remove later once more mana sources are added
