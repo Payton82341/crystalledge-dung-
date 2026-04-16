@@ -2,7 +2,7 @@
   id: CEConsumableSlimeCoreWater
   parent:
   - CEConsumableFoodBase
-  - CESlimeCore
+  - CESlimeCoreBase
   name: Water slime core
   description: A pulsating core from a slime. It humidifies the surrounding air. It seems fragile.
   components:
