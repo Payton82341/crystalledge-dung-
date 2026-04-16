@@ -15,7 +15,7 @@
     effects:
     - !type:AddTempShield
       amount: 10
-      damageType: cold
+      damageType: Cold
     - !type:RestoreMana
       amount: 3
   - type: CEDestructionEffect
