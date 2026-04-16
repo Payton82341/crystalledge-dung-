@@ -23,6 +23,18 @@
       - id: CEGlassShard
         amount: 1
 
+  # Base consumable food (THIS MIGHT BREAK EVERYTHING FIX IT IF YOU CAN)
+- type: entity
+  id: CEFoodBase
+  parent: BaseItem
+  abstract: true
+  categories: [ ForkFiltered ]
+  name: Crumbs
+  description: Crumbs of some sort of food... If you follow them, you might find some one.
+  components:
+  - type: Item
+    size: Tiny
+
 - type: entity
   id: CEConsumablePotionBase
   parent: CEPotionBase
@@ -40,7 +52,7 @@
 #eating sounds (PLEASE MAKE ACTUAL FOOD BASE, I DON'T KNOW HOW)      
 - type: entity
   id: CEConsumableFoodBase
-  parent: CEPotionBase
+  parent: CEFoodBase
   abstract: true
   components:
   - type: CEConsumable
