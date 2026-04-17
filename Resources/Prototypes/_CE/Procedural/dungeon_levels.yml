@@ -435,13 +435,11 @@
     entries:
     - proto: CEMobSlimeFire
       cost: 3
-      weight: 1
-    - proto: CEMobFireConstruct
-      cost: 10
-      weight: 1
     - proto: CEMobFlem
       cost: 3
     - proto: CEMobFlem2
       cost: 3
     - proto: CEMobFlem3
       cost: 5
+    - proto: CEMobFireConstruct
+      cost: 10
