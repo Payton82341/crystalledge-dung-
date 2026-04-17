@@ -1,10 +1,9 @@
 - type: entity
   id: CEConsumableSlimeCoreFire
   parent:
-  - CEConsumableFoodBase
   - CESlimeCoreBase
   name: Fire slime core
-  description: A pulsating core from a slime. It heats the surrounding air but is cool to the touch. It seems fragile.
+  description: A pulsating core from a fire slime. It heats the surrounding air but is cool to the touch. It seems fragile.
   components:
   - type: Sprite
     layers:
@@ -15,7 +14,7 @@
     - !type:AddTempShield
       amount: 10
       damageType: Fire
-    - !type:RestoreMana
+    - !type:RestoreMana #TODO remove later once more mana scources are added
       amount: 3
   - type: CEDestructionEffect
     effects:

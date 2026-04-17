@@ -23,26 +23,6 @@
       - id: CEGlassShard
         amount: 1
 
-  # Base consumable food (THIS MIGHT BREAK EVERYTHING FIX IT IF YOU CAN)
-- type: entity
-  id: CEFoodBase
-  parent: BaseItem
-  abstract: true
-  categories: [ ForkFiltered ]
-  name: Crumbs
-  description: Crumbs of some sort of food... If you follow them, you might find some one.
-  components:
-  - type: Item
-  - size: Tiny
-  - type: CEDamageable
-  - type: CEDamageOnLand
-    damage:
-      types:
-        Physical: 1
-  - type: CEDestructible
-    destroyThreshold: 1
-    destroySound:
-      collection: GlassBreak
 
 - type: entity
   id: CEConsumablePotionBase
@@ -58,20 +38,6 @@
       path: /Audio/Items/drink.ogg
   - type: CEDestructionEffect
 
-#eating sounds (PLEASE MAKE ACTUAL FOOD BASE, I DON'T KNOW HOW)
-- type: entity
-  id: CEConsumableFoodBase
-  parent: CEFoodBase
-  abstract: true
-  components:
-  - type: CEConsumable
-    whitelist:
-      components:
-      - CEMobState
-    useDelay: 1.5
-    useSound:
-      path: /Audio/Items/eating_1.ogg
-  - type: CEDestructionEffect
 
 - type: entity
   id: CEPotionSmall
@@ -82,6 +48,7 @@
   - type: CEConsumable
     replacementEntity: CEPotionEmptySmall
 
+
 - type: entity
   id: CEPotionMedium
   abstract: true
@@ -90,6 +57,7 @@
     sprite: _CE/Objects/Consumable/Potions/medium_bottle.rsi
   - type: CEConsumable
     replacementEntity: CEPotionEmptyMedium
+
 
 - type: entity
   id: CEPotionCube
@@ -159,5 +127,23 @@
   - type: Sprite
     sprite: _CE/Objects/Consumable/Cores/slimecore.rsi
   - type: CEConsumable
+  - type: Item
+  - size: Tiny
+  - type: CEDamageable
+  - type: CEDamageOnLand
+    damage:
+      types:
+        Physical: 1
+  - type: CEDestructible
+    destroyThreshold: 1
+    destroySound:
+      collection: GlassBreak
+    whitelist:
+      components:
+      - CEMobState
+    useDelay: 1.5
+    useSound:
+      path: /Audio/Items/eating_1.ogg
+  - type: CEDestructionEffect
     layers:
     - state: icon

@@ -1,10 +1,9 @@
 - type: entity
   id: CEConsumableSlimeCoreWater
   parent:
-  - CEConsumableFoodBase
   - CESlimeCoreBase
   name: Water slime core
-  description: A pulsating core from a slime. It humidifies the surrounding air. It seems fragile.
+  description: A pulsating core from a water slime. It humidifies the surrounding air. It seems fragile.
   components:
   - type: Sprite
     layers:
@@ -12,8 +11,7 @@
       color: "#00ccff"
   - type: CEConsumable
     effects:
-    #TODO remove later once more mana sources are added
-    - !type:RestoreMana
+    - !type:RestoreMana #TODO remove later once more mana sources are added
       amount: 3
     - !type:WetArea
       radius: 1
@@ -27,3 +25,4 @@
      fallOffFactor: 0.5
     - !type:SpawnEntity
       effectTarget: User
+  - type: CEDestructible
