@@ -1,5 +1,5 @@
 - type: entity
-  parent: [CEBaseWeapon, CEBaseWeaponDestructible]
+  parent: CEBaseWeapon
   id: CEWeaponHeavyClub
   name: heavy club
   description: TODO
@@ -7,8 +7,6 @@
   - type: Sprite
     sprite: _CE/Objects/Weapons/heavy_club.rsi
     state: icon
-  - type: CEDestructible
-    destroyThreshold: 50
   - type: CEWeapon
     effectSlots:
       OnHit:
@@ -20,11 +18,9 @@
           damage:
             types:
               Physical: 15
-        - !type:Damage
-          effectTarget: Used
-          damage:
-            types:
-              Physical: 1
+        - !type:ThrowFromUser
+          throwPower: 10
+          distance: 1
       OnHeavyHit:
       - !type:WeaponArcAttack
         range: 0.6
@@ -34,11 +30,6 @@
           damage:
             types:
               Physical: 15
-        - !type:Damage
-          effectTarget: Used
-          damage:
-            types:
-              Physical: 1
     animations:
       Primary:
       - anim: StaffAttackLight1

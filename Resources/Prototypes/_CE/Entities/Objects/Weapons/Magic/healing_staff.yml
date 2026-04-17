@@ -1,5 +1,5 @@
 - type: entity
-  parent: [CEBaseWeapon, CEBaseWeaponDestructible]
+  parent: CEBaseWeapon
   id: CEWeaponMagicStaffHealing
   name: healing staff
   description: A staff imbued with healing magic. Restores health to anything it hit.
@@ -52,8 +52,8 @@
     costs:
       Primary: 1
   - type: CECharges
-    maxCharges: 10
-    currentCharges: 10
+    maxCharges: 15
+    currentCharges: 15
   - type: Clothing
     slots:
     - neck
@@ -77,8 +77,9 @@
     energy: 3.0
   - type: CEProjectile
     hitEffects:
-    - !type:AddRegeneration
-      amount: 2
+    - !type:ApplyStatusEffectStack
+      statusEffect: CEStatusEffectRegeneration
+      stack: 2
     - !type:SpawnEntity
       spawns:
       - CEEffectHealingGeneric
