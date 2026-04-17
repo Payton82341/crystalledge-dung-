@@ -128,6 +128,7 @@
   - type: Sprite
     sprite: _CE/Objects/Consumable/Cores/slimecore.rsi
   - type: CEConsumable
+    effects: []
   - type: Item
     size: Tiny
   - type: CEDamageable
