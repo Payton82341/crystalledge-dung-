@@ -15,7 +15,6 @@
     - !type:AddTempShield
       amount: 10
       damageType: Fire
-      #TODO remove later once more mana sources are added
     - !type:RestoreMana
       amount: 3
   - type: CEDestructionEffect
