@@ -11,9 +11,9 @@
       color: "#dfad57"
   - type: CEConsumable
     effects:
-    - !type:AddTempShield
-      amount: 10
-      damageType: Fire
+    - !type:ApplyStatusEffectStack
+      statusEffect: CEStatusEffectTempShieldFire
+      stack: 10
     - !type:RestoreMana #TODO remove later once more mana scources are added
       amount: 3
   - type: CEDestructionEffect
@@ -24,9 +24,9 @@
         components:
         - CEMobState
       effects:
-      - !type:AddTempShield
-        amount: 10
-        damageType: Fire
+      - !type:ApplyStatusEffectStack
+        statusEffect: CEstatusEffectTempShieldFire
+        stack:
     - !type:SpawnEntity
       effectTarget: User
       spawns:
