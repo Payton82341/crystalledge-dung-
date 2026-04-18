@@ -26,9 +26,8 @@
           types:
             Physical: 1
       OnHeavyHit:
-      - !type:ApplyStatusEffectStack
-        statusEffect: CEStatusEffectRegeneration
-        stack: 4
+      - !type:Heal
+        amount: 10
       - !type:SpawnEntity
         spawns:
         - CEEffectHealingGeneric
@@ -46,8 +45,8 @@
       Primary: 1
       Secondary: 1
   - type: CECharges
-    maxCharges: 15
-    currentCharges: 15
+    maxCharges: 10
+    currentCharges: 10
   - type: Clothing
     slots:
     - neck
@@ -70,9 +69,8 @@
     energy: 3.0
   - type: CEProjectile
     hitEffects:
-    - !type:ApplyStatusEffectStack
-      statusEffect: CEStatusEffectRegeneration
-      stack: 2
+    - !type:Heal
+      amount: 5
     - !type:SpawnEntity
       spawns:
       - CEEffectHealingGeneric

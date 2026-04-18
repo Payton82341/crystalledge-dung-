@@ -20,7 +20,7 @@
     - !type:ApplyStatusEffectStack
       effectTarget: User
       statusEffect: CEStatusEffectStrength
-      stack: 4
+      stack: 2
 
 - type: alert
   id: CERagingFury

@@ -15,7 +15,7 @@
   id: CEUncommonWeapon
   table: !type:GroupSelector
     children:
-    - id: CEWeaponDaggerSacrificial
+    #- id: CEWeaponDaggerSacrificial
     - id: CEWeaponMagicStaffHealing
     - id: CEWeaponSwordBone
     - id: CEWeaponSpearSoulCatcher
