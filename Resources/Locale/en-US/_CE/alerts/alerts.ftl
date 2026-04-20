@@ -37,5 +37,8 @@ ce-alert-fight-for-survival-desc = You are resisting death as it slowly approach
 ce-alert-strength-name = Strength
 ce-alert-strength-desc = Your melee attacks deal bonus damage.
 
+ce-alert-poisoned-name = Poisoned
+ce-alert-poisoned-desc = You take damage over time. Any source of healing removes 1 stack of poison.
+
 ce-alert-pacifism-name = Safe Zone
 ce-alert-pacifism-desc = You are in a safe zone. All combat is disabled.

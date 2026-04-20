@@ -10,6 +10,9 @@
   - type: StatusEffectAlert
     alert: CEFightForSurvival
   - type: RejuvenateRemovedStatusEffect
+  - type: CERemoveStackOnHeal
+    amount: 20
+    canRemoveStatusEffect: false
   - type: CEDamageStatusEffect
     interruptDoAfters: false
     ignoreArmor: true
