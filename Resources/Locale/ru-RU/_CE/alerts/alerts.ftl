@@ -33,3 +33,9 @@ ce-alert-regeneration-desc = Ваше здоровье медленно восс
 
 ce-alert-fight-for-survival-name = Борьба за жизнь
 ce-alert-fight-for-survival-desc = Вы сопротивляетесь медленно приближающейся к вам смерти.
+
+ce-alert-strength-name = Сила
+ce-alert-strength-desc = Ваши атаки в ближнем бою наносят дополнительный урон.
+
+ce-alert-pacifism-name = Безопасная зона
+ce-alert-pacifism-desc = Успокаивающий эффект безопасного убежища не позволяет вам причинять вред окружающим.

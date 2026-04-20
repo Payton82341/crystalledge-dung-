@@ -22,9 +22,13 @@
         arcWidth: 45
         effects:
         - !type:Damage
+          attackType: Melee
           damage:
             types:
               Physical: 5
+        - !type:FreezeArea
+          radius: 1
+          maxStacks: 3
     animations:
       Primary:
       - anim: StaffAttackLight1
@@ -38,7 +42,6 @@
   - type: Clothing
     slots:
     - neck
-  - type: Wieldable
 
 - type: entity
   id: CEProjectileMagicIce
@@ -58,6 +61,7 @@
   - type: CEProjectile
     hitEffects:
     - !type:Damage
+      attackType: Ranged
       damage:
         types:
           Cold: 5

@@ -10,6 +10,7 @@
   name: Firewall
   description: You create a wall of fire that sets creatures and the ground [color=#ff8a05]on fire[/color].
   components:
+  - type: CEActionDangerous
   - type: CEVisualizeWideLineAction
     width: 2.5
     projectileMode: true
@@ -140,9 +141,16 @@
         - LowImpassable
         hard: false
   - type: Projectile
-    damage:
-      types:
-        Heat: 0
+  - type: CEProjectile
+    hitEffects:
+    - !type:Damage
+      attackType: Ranged
+      damage:
+        types:
+          Fire: 20
+    - !type:IgniteArea
+      radius: 3
+      maxStacks: 10
   - type: CEEntityEffectSpawner
     frequency: 0.2
     firstDelay: 0.3

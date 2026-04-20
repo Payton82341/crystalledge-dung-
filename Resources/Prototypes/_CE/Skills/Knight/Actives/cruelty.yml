@@ -13,6 +13,7 @@
   name: Cruelty
   description: Your next melee attack applies [color=#b2e3eb]5 Bruise[/color] stacks, increasing the physical damage taken by targets.
   components:
+  - type: CEActionDangerous
   - type: CEActionManaCost
     manaCost: 4
   - type: CEActionWeaponRequired
@@ -104,13 +105,6 @@
   name: Cruelty
   description: Your next melee attack applies [color=#b2e3eb]5 Bruise[/color] stacks, increasing the physical damage taken by targets.
   components:
-  - type: Sprite
-    noRot: true
-    drawdepth: Effects
-    sprite: _CE/Effects/focus_status.rsi
-    layers:
-    - state: effect
-      shader: unshaded
   - type: StatusEffect
   - type: StatusEffectAlert
     alert: CECruelty
@@ -120,9 +114,6 @@
     - !type:ApplyStatusEffectStack
       statusEffect: CEStatusEffectBruise
       stack: 5
-  - type: PointLight
-    color: "#0e0808"
-    radius: 1.9
 
 - type: alert
   id: CECruelty

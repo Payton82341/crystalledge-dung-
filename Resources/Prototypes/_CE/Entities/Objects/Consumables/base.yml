@@ -92,6 +92,15 @@
     layers:
     - state: icon
 
+- type: entity
+  id: CEPotionEmptyStar
+  parent: CEPotionBase
+  components:
+  - type: Sprite
+    sprite: _CE/Objects/Consumable/Potions/star_bottle.rsi
+    layers:
+    - state: icon
+
 #Shards
 - type: entity
   id: CEGlassShard
