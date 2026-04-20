@@ -146,9 +146,9 @@
     whitelist:
       components:
       - CEMobState
-      useDelay: 1.5
-      useSound:
-        path: /Audio/Effects/Fluids/watersplash.ogg
+    useDelay: 1.5
+    useSound:
+      path: /Audio/Effects/Fluids/watersplash.ogg
   - type: Item
     size: Tiny
   - type: CEDamageable
