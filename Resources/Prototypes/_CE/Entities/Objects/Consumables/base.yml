@@ -134,7 +134,6 @@
       useDelay: 1.5
       useSound:
         path: /Audio/Effects/Fluids/watersplash.ogg
-        - type: CEDestructionEffect
     effects:
   - type: Item
     size: Tiny
