@@ -23,7 +23,6 @@
       - id: CEGlassShard
         amount: 1
 
-
 - type: entity
   id: CEConsumablePotionBase
   parent: CEPotionBase
@@ -38,7 +37,6 @@
       path: /Audio/Items/drink.ogg
   - type: CEDestructionEffect
 
-
 - type: entity
   id: CEPotionSmall
   abstract: true
@@ -47,7 +45,6 @@
     sprite: _CE/Objects/Consumable/Potions/small_bottle.rsi
   - type: CEConsumable
     replacementEntity: CEPotionEmptySmall
-
 
 - type: entity
   id: CEPotionMedium
@@ -58,7 +55,6 @@
   - type: CEConsumable
     replacementEntity: CEPotionEmptyMedium
 
-
 - type: entity
   id: CEPotionCube
   abstract: true
@@ -67,7 +63,6 @@
     sprite: _CE/Objects/Consumable/Potions/cube_bottle.rsi
   - type: CEConsumable
     replacementEntity: CEPotionEmptyCube
-
 
 # Empty potion vial (trash left after a multi-charge potion)
 - type: entity
@@ -123,6 +118,7 @@
 - type: entity
   id: CESlimeCoreBase
   abstract: true
+  parent: BaseItem
   categories: [ ForkFiltered ]
   components:
   - type: Sprite
@@ -144,5 +140,3 @@
         Physical: 1
   - type: CEDestructible
     destroyThreshold: 1
-    layers:
-    - state: icon

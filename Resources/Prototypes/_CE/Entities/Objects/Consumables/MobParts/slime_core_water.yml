@@ -19,10 +19,10 @@
       fallOffFactor: 0.5
   - type: CEDestructionEffect
     effects:
-  - !type:WetArea
-    radius: 3
-    maxStacks: 10
-    fallOffFactor: 0.5
-  - !type:SpawnEntity
-     effectTarget: User
+    - !type:WetArea
+      radius: 3
+      maxStacks: 10
+      fallOffFactor: 0.5
+    - !type:SpawnEntity
+      effectTarget: User
   - type: CEDestructible
