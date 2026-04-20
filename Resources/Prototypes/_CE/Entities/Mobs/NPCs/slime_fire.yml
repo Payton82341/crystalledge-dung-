@@ -20,7 +20,7 @@
       children:
       - id: CEConsumableSlimeCoreFire
         amount: 1
-        weight: 0.75
+        prob: 0.75
   - type: CEDestructionEffect
     effects:
     - !type:IgniteArea

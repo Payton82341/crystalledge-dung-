@@ -128,7 +128,14 @@
   - type: Sprite
     sprite: _CE/Objects/Consumable/Cores/slimecore.rsi
   - type: CEConsumable
-    effects: []
+    whitelist:
+      components:
+      - CEMobState
+      useDelay: 1.5
+      useSound:
+        path: /Audio/Effects/Fluids/watersplash.ogg
+        - type: CEDestructionEffect
+    effects:
   - type: Item
     size: Tiny
   - type: CEDamageable
@@ -138,14 +145,5 @@
         Physical: 1
   - type: CEDestructible
     destroyThreshold: 1
-    destroySound:
-      collection: GlassBreak
-    whitelist:
-      components:
-      - CEMobState
-    useDelay: 1.5
-    useSound:
-      path: /Audio/Items/eating_1.ogg
-  - type: CEDestructionEffect
     layers:
     - state: icon

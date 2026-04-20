@@ -20,7 +20,7 @@
       children:
       - id: CEConsumableSlimeCoreWater
         amount: 1
-        weight: 0.75
+        prob: 0.75
   - type: CEDestructionEffect
     effects:
     - !type:WetArea

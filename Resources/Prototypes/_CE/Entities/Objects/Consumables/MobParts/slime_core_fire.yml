@@ -24,13 +24,10 @@
         components:
         - CEMobState
       effects:
-      - !type:ApplyStatusEffectStack
-        statusEffect: CEstatusEffectTempShieldFire
-        stack: 10
-    - !type:SpawnEntity
-      effectTarget: User
-      spawns:
-      - CEEffectAreaHealingEffect
+      - !type:IgniteArea
+        radius: 3
+        maxStacks: 4
+        fallOffFactor: 0.5
   - type: CEDestructible
 
 
