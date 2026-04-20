@@ -18,10 +18,10 @@
     - random:
         base1: ""
         base2: ""
-  - type: Clothing 
+  - type: Clothing
     sprite: _CE/Objects/Consumable/Flowers/blue_aelyta.rsi
     slots:
-    - head 
+    - head
   - type: Foldable
     canFoldInsideContainer: true
     unfoldVerbText: fold-flip-verb
@@ -34,7 +34,7 @@
       collection: eating
     effects:
     - !type:RestoreMana
-      amount: 2
+      amount: 1
     - !type:ApplyStatusEffectStack
       effectTarget: Target
       statusEffect: CEStatusEffectPoison
