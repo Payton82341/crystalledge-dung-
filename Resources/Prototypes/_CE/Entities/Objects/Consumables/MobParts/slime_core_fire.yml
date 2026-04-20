@@ -1,7 +1,7 @@
 - type: entity
   id: CEConsumableSlimeCoreFire
   parent:
-  - CESlimeCoreBase
+   CESlimeCoreBase
   name: Fire slime core
   description: A pulsating core from a fire slime. It heats the surrounding air but is cool to the touch. It seems fragile.
   components:
@@ -22,8 +22,5 @@
       radius: 3
       maxStacks: 4
       fallOffFactor: 0.5
-    - !type:SpawnEntity
-      effectTarget: User
-  - type: CEDestructible
 
 

@@ -1,7 +1,7 @@
 - type: entity
   id: CEConsumableSlimeCoreWater
   parent:
-  - CESlimeCoreBase
+   CESlimeCoreBase
   name: Water slime core
   description: A pulsating core from a water slime. It humidifies the surrounding air. It seems fragile.
   components:
@@ -23,6 +23,3 @@
       radius: 3
       maxStacks: 10
       fallOffFactor: 0.5
-    - !type:SpawnEntity
-      effectTarget: User
-  - type: CEDestructible
