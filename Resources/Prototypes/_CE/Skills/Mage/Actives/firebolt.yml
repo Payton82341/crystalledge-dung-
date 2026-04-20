@@ -10,6 +10,7 @@
   name: Firebolt
   description: You hurl a fireball that explodes on impact, setting the ground and creatures [color=#ff8a05]on fire[/color].
   components:
+  - type: CEActionDangerous
   - type: Sprite
     sprite: _CE/Skills/Mage/firebolt.rsi
     state: icon
@@ -104,12 +105,13 @@
   - type: CEProjectile
     hitEffects:
     - !type:Damage
+      attackType: Ranged
       damage:
         types:
-          Fire: 15
+          Fire: 20
     - !type:IgniteArea
       radius: 2
-      maxStacks: 5
+      maxStacks: 10
     - !type:SpawnEntity
       effectTarget: Target
       spawns:
