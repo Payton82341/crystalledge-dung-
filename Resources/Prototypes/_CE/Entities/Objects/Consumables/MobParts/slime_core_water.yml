@@ -12,6 +12,9 @@
     effects:
     - !type:RestoreMana #TODO remove later once more mana sources are added
       amount: 3
+    - !type:SpawnEntity #TODO remove alongside RestoreMana
+      spawns:
+      - CEEffectManaRestore
     - !type:WetArea
       radius: 1
       maxStacks: 10
