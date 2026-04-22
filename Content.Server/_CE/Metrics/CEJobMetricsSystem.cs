@@ -14,6 +14,7 @@ public sealed class CEJobMetricsSystem : EntitySystem
     [Dependency] private readonly IMeterFactory _meterFactory = default!;
     [Dependency] private readonly MindSystem _mind = default!;
     [Dependency] private readonly JobSystem _job = default!;
+    [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly ILogManager _logManager = default!;
 
     private Dictionary<ProtoId<JobPrototype>, int> _activeJobs = new();
@@ -28,10 +29,10 @@ public sealed class CEJobMetricsSystem : EntitySystem
 
         _metrics.UpdateMetrics += MeasureRoleCounts;
 
-        var meter = _meterFactory.Create("Edge.JobMetrics");
+        var meter = _meterFactory.Create("CrystallEdge.JobMetrics");
 
         meter.CreateObservableGauge(
-            "crystall_edge_job_roles_active_players",
+            "job_roles_active_players",
             MeasureJobCount,
             null,
             "A counter showing the number of game roles currently being played");
@@ -57,6 +58,15 @@ public sealed class CEJobMetricsSystem : EntitySystem
 
         _activeJobs.Clear();
 
+        var allJobs = _proto.EnumeratePrototypes<JobPrototype>();
+        foreach (var job in allJobs)
+        {
+            if (!job.SetPreference)
+                continue;
+
+            _activeJobs.Add(job, 0);
+        }
+
         var query = EntityQueryEnumerator<ActorComponent>();
         while (query.MoveNext(out var uid, out var actor))
         {
@@ -69,7 +79,10 @@ public sealed class CEJobMetricsSystem : EntitySystem
             if (!jobProto.SetPreference)
                 continue;
 
-            _activeJobs.Add(jobProto, 1);
+            if (!_activeJobs.TryGetValue(jobProto, out var activeCount))
+                continue;
+
+            _activeJobs[jobProto] = activeCount + 1;
         }
     }
 }
