@@ -15,8 +15,14 @@ public sealed partial class CEDungeonInstanceSystem
 
     private void InitializeEntryAnnounce()
     {
+        SubscribeLocalEvent<CEDungeonPlayerComponent, MapInitEvent>(OnPlayerMapInit);
         SubscribeLocalEvent<CEDungeonPlayerComponent, EntParentChangedMessage>(OnPlayerParentChanged);
         SubscribeLocalEvent<CEDungeonPlayerComponent, ComponentShutdown>(OnPlayerShutdown);
+    }
+
+    private void OnPlayerMapInit(Entity<CEDungeonPlayerComponent> ent, ref MapInitEvent args)
+    {
+        ent.Comp.SessionStartedAt = _timing.CurTime;
     }
 
     private void OnPlayerShutdown(Entity<CEDungeonPlayerComponent> ent, ref ComponentShutdown args)
@@ -57,6 +63,8 @@ public sealed partial class CEDungeonInstanceSystem
 
         if (!visited.Add(proto.ID))
             return;
+
+        TrackLevelReached(ent, proto.ID);
 
         // Send the popup to the controlling player session.
         if (!TryComp<ActorComponent>(ent, out var actor))

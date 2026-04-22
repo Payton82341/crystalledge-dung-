@@ -15,26 +15,28 @@ public sealed partial class CEBlessingSystem
         "crystall_edge_blessing_skill_offered_total",
         "Total times a skill was offered to a player at a blessing statue.",
         "skill",
-        "job");
+        "job",
+        "skill_type");
 
     private static readonly Counter SkillsChosen = Prometheus.Metrics.CreateCounter(
         "crystall_edge_blessing_skill_chosen_total",
         "Total times a player chose a skill from a blessing statue.",
         "skill",
-        "job");
+        "job",
+        "skill_type");
 
     private void TrackOffered(EntityUid player, IReadOnlyList<ProtoId<CESkillPrototype>> skills)
     {
         var job = ResolveJobLabel(player);
         foreach (var skill in skills)
         {
-            SkillsOffered.WithLabels(skill.Id, job).Inc();
+            SkillsOffered.WithLabels(skill.Id, job, ResolveSkillTypeLabel(skill)).Inc();
         }
     }
 
     private void TrackChosen(EntityUid player, ProtoId<CESkillPrototype> skill)
     {
-        SkillsChosen.WithLabels(skill.Id, ResolveJobLabel(player)).Inc();
+        SkillsChosen.WithLabels(skill.Id, ResolveJobLabel(player), ResolveSkillTypeLabel(skill)).Inc();
     }
 
     private string ResolveJobLabel(EntityUid player)
@@ -46,5 +48,13 @@ public sealed partial class CEBlessingSystem
             return "unknown";
 
         return jobId.Value.Id;
+    }
+
+    private string ResolveSkillTypeLabel(ProtoId<CESkillPrototype> skill)
+    {
+        if (!_proto.TryIndex(skill, out var proto))
+            return "unknown";
+
+        return proto.Effect.SkillType.Id;
     }
 }
