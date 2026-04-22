@@ -95,11 +95,12 @@ public sealed partial class CEWorkbenchSystem : EntitySystem
             if (!_proto.Resolve(recipeId, out var indexedRecipe))
                 continue;
 
-            // Only show recipes the current user knows (if they have knowledge tracking)
+            // Only show recipes the current user knows (if they have knowledge tracking),
+            // unless the recipe is marked as roundstart (available without learning).
             if (entity.Comp.CurrentUser is null)
                 continue;
 
-            if (!_recipeKnowledge.KnowsRecipe(entity.Comp.CurrentUser.Value, recipeId))
+            if (!indexedRecipe.RoundStart && !_recipeKnowledge.KnowsRecipe(entity.Comp.CurrentUser.Value, recipeId))
                 continue;
 
             var canCraft = true;
@@ -123,8 +124,8 @@ public sealed partial class CEWorkbenchSystem : EntitySystem
 
     private bool CanCraftRecipe(CEWorkbenchRecipePrototype recipe, HashSet<EntityUid> entities, EntityUid? user = null)
     {
-        // Validate the user knows the recipe (server-side)
-        if (user is { } u && !_recipeKnowledge.KnowsRecipe(u, recipe.ID))
+        // Validate the user knows the recipe (server-side), unless it is roundstart.
+        if (!recipe.RoundStart && user is { } u && !_recipeKnowledge.KnowsRecipe(u, recipe.ID))
             return false;
 
         foreach (var req in recipe.Requirements)
