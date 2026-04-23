@@ -8,16 +8,10 @@
   },
   "states": [
     {
-        "name": "template"
+        "name": "gold"
     },
     {
-        "name": "basic_alchemy"
-    },
-    {
-        "name": "mana_conservation"
-    },
-    {
-        "name": "regeneration"
+        "name": "iron"
     }
   ]
 }

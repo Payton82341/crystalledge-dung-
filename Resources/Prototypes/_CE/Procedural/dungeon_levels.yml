@@ -123,20 +123,6 @@
         domainWarpAmp: 120
       entities:
         - CERandomBushOffsetSpawner
-    - !type:BiomeEntityLayer # Random herbs
-      threshold: 0.7
-      noise:
-        seed: 29
-        noiseType: OpenSimplex2
-        fractalType: Ridged
-        frequency: 0.05
-        octaves: 3
-        lacunarity: 1.8
-        gain: 0.7
-        domainWarpType: OpenSimplex2
-        domainWarpAmp: 120
-      entities:
-        - CESpawnerRandomFlowers
     - !type:BiomeEntityLayer # God rays!
       threshold: 0.3
       noise:
@@ -151,8 +137,46 @@
         domainWarpAmp: 120
       entities:
         - CEGodRaysMoon
-
-
+  - !type:CEBudgetSpawnPostProcess #Herbs
+    budget: 5
+    tileWhitelist:
+    - CEDirt
+    - CEGrass
+    - CEGrassLight
+    - CEGrassTall
+    entries:
+    - proto: CESpawnerRandomFlowers
+      cost: 1
+  - !type:CEBudgetSpawnPostProcess #1 Key
+    budget: 1
+    anchoredWhitelist:
+      components:
+      - PlaceableSurface
+    entries:
+    - proto: CEIronKey
+      cost: 1
+  - !type:CEBudgetSpawnPostProcess #Guaranteed Healing
+    budget: 75
+    anchoredWhitelist:
+      components:
+      - PlaceableSurface
+    entries:
+    - proto: CEConsumablePotionRegeneration
+      cost: 20
+    - proto: CEConsumablePotionHealingSmall
+      cost: 25
+    - proto: CEConsumablePotionHealingMedium
+      cost: 50
+  - !type:CEBudgetSpawnPostProcess #Guaranteed Mana
+    budget: 10
+    anchoredWhitelist:
+      components:
+      - PlaceableSurface
+    entries:
+    - proto: CEConsumablePotionManaSmall
+      cost: 5
+    - proto: CEConsumablePotionManaMedium
+      cost: 10
 
 
 - type: dungeonLevel
@@ -170,36 +194,12 @@
     - type: Gravity
       enabled: true
       inherent: true
-    generalRooms:
-      whitelist:
-        requireAll: true
-        tags:
-        - CEDunGenMossyTemple
-        - CEDunGenRoomGeneral
-    exitRoom:
-      whitelist:
-        requireAll: true
-        tags:
-        - CEDunGenMossyTemple
-        - CEDunGenRoomExit
-    entranceRooms:
-      whitelist:
-        requireAll: true
-        tags:
-        - CEDunGenMossyTemple
-        - CEDunGenRoomEntrance
-    blessingRooms:
-      whitelist:
-        requireAll: true
-        tags:
-        - CEDunGenMossyTemple
-        - CEDunGenRoomBlessing
-    deadEndRooms:
-      whitelist:
-        requireAll: true
-        tags:
-        - CEDunGenMossyTemple
-        - CEDunGenRoomDeadEnd
+    generalRooms: MossyTempleGeneralRoom
+    exitRoom: MossyTempleExitRoom
+    entranceRooms: MossyTempleEntranceRoom
+    blessingRooms: MossyTempleBlessingRoom
+    treasureRooms: MossyTempleTreasureRoom
+    deadEndRooms: MossyTempleDeadEndRoom
 
 # Floor 1: Small introductory level.
 - type: dungeonLevel
@@ -219,6 +219,9 @@
       min: 2
       max: 2
     blessingCount:
+      min: 1
+      max: 1
+    treasureCount:
       min: 1
       max: 1
     cycleCount:
@@ -251,12 +254,15 @@
   config:
     !type:CEProceduralConfig
     generalCount:
-      min: 10
-      max: 15
+      min: 7
+      max: 10
     entranceCount:
       min: 2
       max: 2
     blessingCount:
+      min: 1
+      max: 1
+    treasureCount:
       min: 1
       max: 1
     cycleCount:
@@ -295,6 +301,9 @@
       min: 10
       max: 15
     blessingCount:
+      min: 1
+      max: 1
+    treasureCount:
       min: 1
       max: 1
     cycleCount:
@@ -336,6 +345,9 @@
       min: 10
       max: 15
     blessingCount:
+      min: 1
+      max: 1
+    treasureCount:
       min: 1
       max: 1
     cycleCount:
@@ -408,6 +420,9 @@
     blessingCount:
       min: 0
       max: 0
+    treasureCount:
+      min: 1
+      max: 1
     cycleCount:
       min: 10
       max: 10
