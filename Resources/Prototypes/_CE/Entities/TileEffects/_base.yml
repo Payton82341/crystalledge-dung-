@@ -4,7 +4,6 @@
   placement:
     mode: SnapgridCenter
   components:
-  - type: Clickable
   - type: Sprite
     drawdepth: Mobs
     noRot: true

@@ -47,6 +47,7 @@
   - type: CEPreventTileEffect
     blocks:
     - CETileEffectFire
+    - CETileEffectCursedFire
   - type: CEEntityEffectOnCollide
     effects:
     - !type:ApplyStatusEffectStack
