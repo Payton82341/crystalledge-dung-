@@ -6,3 +6,55 @@
   id: 8
   time: '2025-10-18T09:25:00.0000000+00:00'
   url: https://github.com/space-wizards/SS14.Changelog
+- author: TheShuEd
+  changes:
+  - message: Added fun!
+    type: Add
+  - message: Removed fun!
+    type: Remove
+  - message: Changed fun!
+    type: Tweak
+  - message: Fixed fun!
+    type: Fix
+  id: 9
+  time: '2026-05-03T23:17:37.0000000+00:00'
+  url: https://github.com/crystallpunk-14/crystalledge/pull/202
+- author: TheShuEd
+  changes:
+  - message: Added fun!
+    type: Add
+  - message: Removed fun!
+    type: Remove
+  - message: Changed fun!
+    type: Tweak
+  - message: Fixed fun!
+    type: Fix
+  id: 10
+  time: '2026-05-03T19:21:44.0000000+00:00'
+  url: https://github.com/crystallpunk-14/crystalledge/pull/200
+- author: TheShuEd
+  changes:
+  - message: Added fun!
+    type: Add
+  - message: Removed fun!
+    type: Remove
+  - message: Changed fun!
+    type: Tweak
+  - message: Fixed fun!
+    type: Fix
+  id: 11
+  time: '2026-05-03T19:17:00.0000000+00:00'
+  url: https://github.com/crystallpunk-14/crystalledge/pull/199
+- author: TheShuEd
+  changes:
+  - message: Added fun!
+    type: Add
+  - message: Removed fun!
+    type: Remove
+  - message: Changed fun!
+    type: Tweak
+  - message: Fixed fun!
+    type: Fix
+  id: 12
+  time: '2026-05-03T19:27:00.0000000+00:00'
+  url: https://github.com/crystallpunk-14/crystalledge/pull/201
