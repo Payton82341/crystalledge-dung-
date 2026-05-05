@@ -25,3 +25,11 @@
   id: 10005
   time: '2026-05-05T11:29:58.0000000+00:00'
   url: https://github.com/crystallpunk-14/crystalledge/pull/212
+- author: TheShuEd
+  changes:
+  - message: Fixed a bug that allowed one player to permanently block other players
+      from using the statue
+    type: Fix
+  id: 10006
+  time: '2026-05-05T12:25:49.0000000+00:00'
+  url: https://github.com/crystallpunk-14/crystalledge/pull/213
