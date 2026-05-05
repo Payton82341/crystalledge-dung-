@@ -40,3 +40,14 @@
   id: 10003
   time: '2026-05-04T20:44:14.0000000+00:00'
   url: https://github.com/crystallpunk-14/crystalledge/pull/210
+- author: TheShuEd
+  changes:
+  - message: 'New neutral active skill "Soul Eater": consume 1 soul to restore 1 mana'
+    type: Add
+  - message: Removed "Recovery" priest passive
+    type: Remove
+  - message: Nerfed mage fireball
+    type: Tweak
+  id: 10004
+  time: '2026-05-05T10:31:45.0000000+00:00'
+  url: https://github.com/crystallpunk-14/crystalledge/pull/211
