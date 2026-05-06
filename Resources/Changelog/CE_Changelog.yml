@@ -44,3 +44,23 @@
   id: 10007
   time: '2026-05-05T14:41:34.0000000+00:00'
   url: https://github.com/crystallpunk-14/crystalledge/pull/214
+- author: TheShuEd
+  changes:
+  - message: Most combat spells now consume stamina to cast. Some spells now have
+      very short cooldowns but high stamina costs, allowing you to cast them repeatedly
+      as long as you have enough stamina.
+    type: Add
+  - message: Libraries now spawn 100% of the time on the first floor, and alchemy
+      rooms on the second floor
+    type: Tweak
+  - message: The alchemy rooms no longer require keys to enter
+    type: Tweak
+  - message: Keys, mobs, and other random loot will no longer spawn in locked rooms
+      (secrets, treasures, libraries)
+    type: Tweak
+  - message: Fixed a bug where casting multiple spells in quick succession could cancel
+      the effects of some of them, resulting in wasted resources
+    type: Fix
+  id: 10008
+  time: '2026-05-06T10:42:58.0000000+00:00'
+  url: https://github.com/crystallpunk-14/crystalledge/pull/219
