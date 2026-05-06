@@ -64,3 +64,15 @@
   id: 10008
   time: '2026-05-06T10:42:58.0000000+00:00'
   url: https://github.com/crystallpunk-14/crystalledge/pull/219
+- author: TheShuEd
+  changes:
+  - message: A new recipe book has been added, allowing you to create alchemical fire
+      and frost potions
+    type: Add
+  - message: Health and mana potions can no longer be found in chests or pots.
+    type: Tweak
+  - message: The weapons no longer fit in the backpacks.
+    type: Tweak
+  id: 10009
+  time: '2026-05-06T13:58:05.0000000+00:00'
+  url: https://github.com/crystallpunk-14/crystalledge/pull/220
