@@ -112,3 +112,17 @@
   id: 10012
   time: '2026-05-07T13:47:21.0000000+00:00'
   url: https://github.com/crystallpunk-14/crystalledge/pull/217
+- author: TheShuEd
+  changes:
+  - message: Added new mage passive skill "Sharp floor" - When you freeze an area,
+      you also cover it with sharp ice spikes.
+    type: Add
+  - message: Tall bushes, ice spikes, and stone spikes can now be broken with melee
+      attacks
+    type: Add
+  - message: Fixed an issue where the soul requirement icon appeared misaligned above
+      statues when the camera was zoomed in at a non-standard level
+    type: Fix
+  id: 10013
+  time: '2026-05-07T16:30:57.0000000+00:00'
+  url: https://github.com/crystallpunk-14/crystalledge/pull/223
