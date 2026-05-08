@@ -1,9 +1,11 @@
 using Content.Shared._CE.EntityEffect;
+using Content.Shared._CE.EntityEffect.Effects;
 using Content.Shared._CE.Health;
 using Content.Shared._CE.MeleeWeapon;
 using Content.Shared._CE.Skill.Skills.EffectsOnTriggerStatusEffects.Components;
+using Content.Shared._CE.Soul;
 using Content.Shared._CE.StatusEffects.Core;
-using Content.Shared._CE.StatusEffectStacks;
+using Content.Shared._CE.TileEffects.Core;
 using Content.Shared.StatusEffectNew;
 using Content.Shared.StatusEffectNew.Components;
 using Content.Shared.Whitelist;
@@ -21,6 +23,9 @@ public sealed class CEEffectsOnTriggerStatusEffectSystem : EntitySystem
         SubscribeLocalEvent<CEEffectOnAttackStatusEffectComponent, StatusEffectRelayedEvent<CEAfterAttackEvent>>(OnAfterAttack);
         SubscribeLocalEvent<CEEffectOnHealStatusEffectComponent, StatusEffectRelayedEvent<CEHealEvent>>(OnHeal);
         SubscribeLocalEvent<CEEffectOnDamagedStatusEffectComponent, StatusEffectRelayedEvent<CEDamageChangedEvent>>(OnDamaged);
+        SubscribeLocalEvent<CEEffectOnSoulReceivedStatusEffectComponent, StatusEffectRelayedEvent<CESoulReceivedEvent>>(OnSoulReceived);
+        SubscribeLocalEvent<CEEffectOnTileApplyStatusEffectComponent, StatusEffectRelayedEvent<CEAttemptApplyTileEffectEvent>>(OnTileApply);
+        SubscribeLocalEvent<CEEffectOnStatusEffectApplyStatusEffectComponent, StatusEffectRelayedEvent<CEAfterApplyStatusEffectEvent>>(OnStatusEffectApply);
     }
 
     private void OnAfterAttack(Entity<CEEffectOnAttackStatusEffectComponent> ent, ref StatusEffectRelayedEvent<CEAfterAttackEvent> args)
@@ -92,6 +97,84 @@ public sealed class CEEffectsOnTriggerStatusEffectSystem : EntitySystem
             1f,
             args.Args.Source,
             Transform(status.AppliedTo.Value).Coordinates);
+
+        foreach (var effect in ent.Comp.Effects)
+        {
+            effect.Effect(effectArgs);
+        }
+
+        _stack.TryRemoveStack(ent.Owner, ent.Comp.StackCost);
+    }
+
+    private void OnSoulReceived(Entity<CEEffectOnSoulReceivedStatusEffectComponent> ent, ref StatusEffectRelayedEvent<CESoulReceivedEvent> args)
+    {
+        if (args.Args.Amount <= 0)
+            return;
+
+        if (!TryComp<StatusEffectComponent>(ent, out var status) || status.AppliedTo is null)
+            return;
+
+        var effectArgs = new CEEntityEffectArgs(
+            EntityManager,
+            status.AppliedTo.Value,
+            null,
+            Angle.Zero,
+            1f,
+            null,
+            Transform(status.AppliedTo.Value).Coordinates);
+
+        foreach (var effect in ent.Comp.Effects)
+        {
+            effect.Effect(effectArgs);
+        }
+
+        _stack.TryRemoveStack(ent.Owner, ent.Comp.StackCost);
+    }
+
+    private void OnTileApply(Entity<CEEffectOnTileApplyStatusEffectComponent> ent, ref StatusEffectRelayedEvent<CEAttemptApplyTileEffectEvent> args)
+    {
+        if (args.Args.Cancelled)
+            return;
+
+        if (ent.Comp.SourceTileEffects.Count > 0 && !ent.Comp.SourceTileEffects.Contains(args.Args.TileEffect))
+            return;
+
+        if (!TryComp<StatusEffectComponent>(ent, out var status) || status.AppliedTo is null)
+            return;
+
+        var effectArgs = new CEEntityEffectArgs(
+            EntityManager,
+            status.AppliedTo.Value,
+            null,
+            Angle.Zero,
+            1f,
+            null,
+            args.Args.Coordinates);
+
+        foreach (var effect in ent.Comp.Effects)
+        {
+            effect.Effect(effectArgs);
+        }
+
+        _stack.TryRemoveStack(ent.Owner, ent.Comp.StackCost);
+    }
+
+    private void OnStatusEffectApply(Entity<CEEffectOnStatusEffectApplyStatusEffectComponent> ent, ref StatusEffectRelayedEvent<CEAfterApplyStatusEffectEvent> args)
+    {
+        if (ent.Comp.SourceStatusEffects.Count > 0 && !ent.Comp.SourceStatusEffects.Contains(args.Args.StatusEffect))
+            return;
+
+        if (!TryComp<StatusEffectComponent>(ent, out var status) || status.AppliedTo is null)
+            return;
+
+        var effectArgs = new CEEntityEffectArgs(
+            EntityManager,
+            status.AppliedTo.Value,
+            null,
+            Angle.Zero,
+            1f,
+            args.Args.Target,
+            Transform(args.Args.Target).Coordinates);
 
         foreach (var effect in ent.Comp.Effects)
         {
