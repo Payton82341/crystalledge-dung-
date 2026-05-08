@@ -156,3 +156,24 @@
   id: 10015
   time: '2026-05-08T12:06:02.0000000+00:00'
   url: https://github.com/crystallpunk-14/crystalledge/pull/225
+- author: TheShuEd
+  changes:
+  - message: '"Soul eater" now restore 10 mana instead 5.'
+    type: Tweak
+  - message: "The mage's new passive ability, \u201CSoul Energy.\u201D Passively restores\
+      \ 2 mana when you collect a soul."
+    type: Add
+  - message: "The priest's new active ability, \u201CCare for Others\u201D. A more\
+      \ effective treatment option for the first condition, but one that does not\
+      \ allow for self-treatment."
+    type: Add
+  - message: "The priest's new passive ability, \u201CBlack Heart.\u201D It grants\
+      \ immunity to the Curse status effect. Additionally, melee attacks will now\
+      \ curse your targets."
+    type: Add
+  - message: "The priest's new passive ability, \u201CBlessed and Protected.\u201D\
+      \ When you cast a blessing on someone, you also grant them up to 3 divine shields."
+    type: Add
+  id: 10016
+  time: '2026-05-08T21:14:55.0000000+00:00'
+  url: https://github.com/crystallpunk-14/crystalledge/pull/227
