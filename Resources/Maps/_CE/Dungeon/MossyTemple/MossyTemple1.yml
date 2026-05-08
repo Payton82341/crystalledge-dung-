@@ -4749,7 +4749,7 @@ entities:
     - type: Transform
       pos: 27.5,-38.5
       parent: 1
-- proto: CEChestWooden
+- proto: CEChestWoodenFilled
   entities:
   - uid: 5108
     components:
