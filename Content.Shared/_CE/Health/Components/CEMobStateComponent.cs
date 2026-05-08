@@ -11,6 +11,7 @@ namespace Content.Shared._CE.Health.Components;
 [Access(typeof(CESharedDamageableSystem), typeof(CEMobStateSystem))]
 public sealed partial class CEMobStateComponent : Component
 {
+    [Obsolete("Just change that into bool Critical DataField")]
     [DataField, AutoNetworkedField]
     public CEMobState CurrentState = CEMobState.Alive;
 
@@ -30,6 +31,7 @@ public sealed partial class CEMobStateComponent : Component
     public int CriticalThreshold = 100;
 }
 
+[Obsolete("Just change that into bool Critical DataField")]
 [Serializable, NetSerializable]
 public enum CEMobState : byte
 {

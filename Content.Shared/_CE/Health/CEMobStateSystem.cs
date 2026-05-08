@@ -248,13 +248,13 @@ public sealed partial class CEMobStateSystem : EntitySystem
 
     private void OnEquipAttempt(EntityUid uid, CEMobStateComponent comp, IsEquippingAttemptEvent args)
     {
-        if (args.Equipee == uid)
+        if (args.User == uid)
             OnBlockIfCritical(uid, comp, args);
     }
 
     private void OnUnequipAttempt(EntityUid uid, CEMobStateComponent comp, IsUnequippingAttemptEvent args)
     {
-        if (args.Unequipee == uid)
+        if (args.User == uid)
             OnBlockIfCritical(uid, comp, args);
     }
 
