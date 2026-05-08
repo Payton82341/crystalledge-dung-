@@ -36,6 +36,12 @@ public sealed partial class CEGOAPSystem : EntitySystem
     private readonly List<CEGOAPAction> _newPlanBuffer = new();
 
     /// <summary>
+    /// Per-system GOAP planner instance. Holds reusable internal buffers so there is
+    /// no shared mutable state between systems or test runs.
+    /// </summary>
+    private readonly CEGOAPPlanner _planner = new();
+
+    /// <summary>
     /// Note: CurrentPlan lists in entity components are reused and cleared/repopulated 
     /// rather than creating new lists each time to minimize GC allocations.
     /// </summary>
@@ -195,7 +201,7 @@ public sealed partial class CEGOAPSystem : EntitySystem
             // Always compute a fresh plan into the temporary buffer so we can compare it
             // against what is currently executing before deciding whether to interrupt.
             _newPlanBuffer.Clear();
-            if (!CEGOAPPlanner.Plan(ent.Comp.WorldState, goal.DesiredState, _executableActions, _newPlanBuffer))
+            if (!_planner.Plan(ent.Comp.WorldState, goal.DesiredState, _executableActions, _newPlanBuffer))
                 continue;
 
             if (_newPlanBuffer.Count == 0)
