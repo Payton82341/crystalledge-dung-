@@ -206,3 +206,22 @@
   id: 10017
   time: '2026-05-11T13:44:39.0000000+00:00'
   url: https://github.com/crystallpunk-14/crystalledge/pull/229
+- author: TheShuEd
+  changes:
+  - message: A strength potion has been added. It can be found in the dungeon.
+    type: Add
+  - message: "The Warrior's new passive skill, \u201CFortress.\u201D When the Warrior\
+      \ applies the Shield status effect to someone, they gain an additional 10 shields."
+    type: Add
+  - message: "The warrior's new active skill, \u201CStone Wall.\u201D Creates a destructible\
+      \ wall that blocks the passage."
+    type: Add
+  - message: "The Warrior's new active skill, \u201CKick.\u201D Deals 15 damage and\
+      \ strongly knocks back targets."
+    type: Add
+  - message: Fixed a bug that caused mobs to get stuck in bushes, grass walls, and
+      thorns
+    type: Fix
+  id: 10018
+  time: '2026-05-11T18:46:11.0000000+00:00'
+  url: https://github.com/crystallpunk-14/crystalledge/pull/230
