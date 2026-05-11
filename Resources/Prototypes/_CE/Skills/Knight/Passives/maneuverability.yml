@@ -1,16 +1,16 @@
 - type: skill
   parent: BaseKnightSkill
-  id: RagingFury
+  id: Maneuverability
   icon:
-    sprite: _CE/Skills/Knight/raging_fury.rsi
+    sprite: _CE/Skills/todo.rsi
     state: icon
   effect: !type:AddStatusEffect
-    effect: CEStatusEffectRagingFury
+    effect: CEStatusEffectManeuverability
 
 - type: entity
-  id: CEStatusEffectRagingFury
-  name: Raging Fury
-  description: Taking damage grants [color=#b2e3eb]4 Strength[/color] stacks.
+  id: CEStatusEffectManeuverability
+  name: Maneuverability
+  description: Taking damage grants [color=#c3ec49]1 Acceleration[/color] stacks.
   components:
   - type: StatusEffect
   - type: StatusEffectAlert
@@ -19,11 +19,12 @@
     effects:
     - !type:ApplyStatusEffectStack
       effectTarget: User
-      statusEffect: CEStatusEffectStrength
+      statusEffect: CEStatusEffectAcceleration
       amount: 2
+      max: 10
 
 - type: alert
   id: CERagingFury
   icons:
-  - sprite: _CE/Skills/Knight/raging_fury.rsi
+  - sprite: _CE/Skills/todo.rsi
     state: icon
