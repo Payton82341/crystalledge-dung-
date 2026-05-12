@@ -251,3 +251,19 @@
   id: 10019
   time: '2026-05-12T09:18:15.0000000+00:00'
   url: https://github.com/crystallpunk-14/crystalledge/pull/231
+- author: TheShuEd, Demimoz Keroz
+  changes:
+  - message: Music has been added to the first safe zone.
+    type: Add
+  - message: Ambient water  and chasm sounds have been added.
+    type: Add
+  - message: 'Dungeon entrance rooms can no longer contain random loot on tables (keys,
+      potions). They are now also protected by a one-way passage: you can leave the
+      starting room, but you cannot go back in. This was done to protect spawn points
+      from campers.'
+    type: Add
+  - message: Souls now restore 3 mana instead of 5.
+    type: Tweak
+  id: 10020
+  time: '2026-05-12T21:06:40.0000000+00:00'
+  url: https://github.com/crystallpunk-14/crystalledge/pull/233
