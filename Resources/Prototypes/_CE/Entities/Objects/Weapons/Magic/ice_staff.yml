@@ -21,8 +21,8 @@
         prototype: CEProjectileMagicIce
         projectileSpeed: 10
         projectileMaxSpeed: 5
-        projectileCount: 5
-        spread: 150
+        projectileCount: 3
+        spread: 0.2
     animations:
       Primary:
       - anim: StaffAttackLight1
@@ -33,12 +33,6 @@
     costs:
       Primary: 1
       Secondary: 3
-  - type: CEWeaponChargesCost
-    costs:
-      Primary: 1
-  - type: CECharges
-    maxCharges: 40
-    currentCharges: 40
   - type: Clothing
     slots:
     - neck
