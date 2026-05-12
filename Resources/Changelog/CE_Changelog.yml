@@ -225,3 +225,29 @@
   id: 10018
   time: '2026-05-11T18:46:11.0000000+00:00'
   url: https://github.com/crystallpunk-14/crystalledge/pull/230
+- author: TheShuEd
+  changes:
+  - message: Collecting the soul of a defeated mob restores 5 mana. Players are now
+      much less constrained by mana.
+    type: Add
+  - message: "The mage's passive ability \u201CEnergy of souls\u201D which restores\
+      \ mana after collecting souls, has been removed."
+    type: Remove
+  - message: "The neutral spell \u201CSphere of Light\u201D has been removed."
+    type: Remove
+  - message: The alternative attack for magic staffs has been reworked.
+    type: Tweak
+  - message: All spells that restore health or provide temporary shields now cost
+      significantly more mana.
+    type: Tweak
+  - message: "\u201CDance of Fire and Ice\u201D now deals only 5 bonus damage instead\
+      \ of 10."
+    type: Tweak
+  - message: "The neutral ability \u201CSoul Eater\u201D now restores 15 mana instead\
+      \ of 10."
+    type: Tweak
+  - message: The Ice Staff is unlimited again.
+    type: Fix
+  id: 10019
+  time: '2026-05-12T09:18:15.0000000+00:00'
+  url: https://github.com/crystallpunk-14/crystalledge/pull/231
