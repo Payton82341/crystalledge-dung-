@@ -1,4 +1,5 @@
 using Content.IntegrationTests.Fixtures;
+using Content.IntegrationTests.Fixtures.Attributes;
 using Content.Shared._CE.Health;
 using Content.Shared._CE.Health.Components;
 using Content.Shared._CE.Health.Prototypes;
@@ -15,6 +16,8 @@ namespace Content.IntegrationTests.Tests._CE.Health;
 public sealed class CEHealthSystemTest : GameTest
 {
     private static readonly ProtoId<CEDamageTypePrototype> TestDamageType = "Physical";
+    [SidedDependency(Side.Server)] private readonly CESharedDamageableSystem _damageableSystem = default!;
+    [SidedDependency(Side.Server)] private readonly CEMobStateSystem _mobStateSystem = default!;
 
     [TestPrototypes]
     private const string Prototypes = @"
@@ -37,13 +40,12 @@ public sealed class CEHealthSystemTest : GameTest
     public async Task TakeDamageMultipleTypes()
     {
         var server = Server;
-        var entManager = server.ResolveDependency<IEntityManager>();
-        var damageableSystem = entManager.System<CESharedDamageableSystem>();
+        var damageableSystem = SEntMan.System<CESharedDamageableSystem>();
 
         await server.WaitAssertion(() =>
         {
-            var ent = entManager.SpawnEntity("CEHealthTestDummy", MapCoordinates.Nullspace);
-            var damageable = entManager.GetComponent<CEDamageableComponent>(ent);
+            var ent = SSpawn("CEHealthTestDummy");
+            var damageable = SComp<CEDamageableComponent>(ent);
 
             var damage = new CEDamageSpecifier
             {
@@ -57,7 +59,6 @@ public sealed class CEHealthSystemTest : GameTest
 
             Assert.That(damageable.Damage.Total, Is.EqualTo(20));
 
-            entManager.DeleteEntity(ent);
         });
     }
 
@@ -68,24 +69,21 @@ public sealed class CEHealthSystemTest : GameTest
     public async Task TakeDamageZeroDamageNoEffect()
     {
         var server = Server;
-        var entManager = server.ResolveDependency<IEntityManager>();
-        var damageableSystem = entManager.System<CESharedDamageableSystem>();
 
         await server.WaitAssertion(() =>
         {
-            var ent = entManager.SpawnEntity("CEHealthTestDummy", MapCoordinates.Nullspace);
-            var damageable = entManager.GetComponent<CEDamageableComponent>(ent);
+            var ent = SSpawn("CEHealthTestDummy");
+            var damageable = SComp<CEDamageableComponent>(ent);
 
             var damage = new CEDamageSpecifier(TestDamageType, 0);
-            var result = damageableSystem.TakeDamage(ent, damage);
+            var result = _damageableSystem.TakeDamage(ent, damage);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Is.False);
-                Assert.That(damageable.Damage.Total, Is.EqualTo(0));
-            });
+                Assert.That(damageable.Damage.Total, Is.Zero);
+            }
 
-            entManager.DeleteEntity(ent);
         });
     }
 
@@ -100,20 +98,17 @@ public sealed class CEHealthSystemTest : GameTest
     public async Task HealCapsAtZero()
     {
         var server = Server;
-        var entManager = server.ResolveDependency<IEntityManager>();
-        var damageableSystem = entManager.System<CESharedDamageableSystem>();
 
         await server.WaitAssertion(() =>
         {
-            var ent = entManager.SpawnEntity("CEHealthTestDummy", MapCoordinates.Nullspace);
-            var damageable = entManager.GetComponent<CEDamageableComponent>(ent);
+            var ent = SSpawn("CEHealthTestDummy");
+            var damageable = SComp<CEDamageableComponent>(ent);
 
-            damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 20));
-            damageableSystem.Heal(ent, 500);
+            _damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 20));
+            _damageableSystem.Heal(ent, 500);
 
-            Assert.That(damageable.Damage.Total, Is.EqualTo(0));
+            Assert.That(damageable.Damage.Total, Is.Zero);
 
-            entManager.DeleteEntity(ent);
         });
     }
 
@@ -124,24 +119,21 @@ public sealed class CEHealthSystemTest : GameTest
     public async Task HealZeroNoEffect()
     {
         var server = Server;
-        var entManager = server.ResolveDependency<IEntityManager>();
-        var damageableSystem = entManager.System<CESharedDamageableSystem>();
 
         await server.WaitAssertion(() =>
         {
-            var ent = entManager.SpawnEntity("CEHealthTestDummy", MapCoordinates.Nullspace);
-            var damageable = entManager.GetComponent<CEDamageableComponent>(ent);
+            var ent = SSpawn("CEHealthTestDummy");
+            var damageable = SComp<CEDamageableComponent>(ent);
 
-            damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 10));
+            _damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 10));
             Assert.That(damageable.Damage.Total, Is.EqualTo(10));
 
-            damageableSystem.Heal(ent, 0);
+            _damageableSystem.Heal(ent, 0);
             Assert.That(damageable.Damage.Total, Is.EqualTo(10));
 
-            damageableSystem.Heal(ent, -5);
+            _damageableSystem.Heal(ent, -5);
             Assert.That(damageable.Damage.Total, Is.EqualTo(10));
 
-            entManager.DeleteEntity(ent);
         });
     }
 
@@ -157,60 +149,56 @@ public sealed class CEHealthSystemTest : GameTest
     public async Task MobStateTransitions()
     {
         var server = Server;
-        var entManager = server.ResolveDependency<IEntityManager>();
-        var damageableSystem = entManager.System<CESharedDamageableSystem>();
-        var mobStateSystem = entManager.System<CEMobStateSystem>();
 
         await server.WaitAssertion(() =>
         {
-            var ent = entManager.SpawnEntity("CEHealthTestDummy", MapCoordinates.Nullspace);
-            var damageable = entManager.GetComponent<CEDamageableComponent>(ent);
-            var mobState = entManager.GetComponent<CEMobStateComponent>(ent);
+            var ent = SSpawn("CEHealthTestDummy");
+            var damageable = SComp<CEDamageableComponent>(ent);
+            var mobState = SComp<CEMobStateComponent>(ent);
 
             // Sub-threshold damage keeps Alive
-            var result = damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 30));
+            var result = _damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 30));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result, Is.True);
                 Assert.That(damageable.Damage.Total, Is.EqualTo(30));
-                Assert.That(mobState.Critical, Is.EqualTo(false));
-                Assert.That(mobStateSystem.IsAlive(ent), Is.True);
-            });
+                Assert.That(mobState.Critical, Is.False);
+                Assert.That(_mobStateSystem.IsAlive(ent), Is.True);
+            }
 
             // Damage exactly to critical threshold (100)
-            damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 70));
+            _damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 70));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(damageable.Damage.Total, Is.EqualTo(100));
-                Assert.That(mobState.Critical, Is.EqualTo(true));
-                Assert.That(mobStateSystem.IsCritical(ent), Is.True);
-                Assert.That(mobStateSystem.IsAlive(ent), Is.False);
-            });
+                Assert.That(mobState.Critical, Is.True);
+                Assert.That(_mobStateSystem.IsCritical(ent), Is.True);
+                Assert.That(_mobStateSystem.IsAlive(ent), Is.False);
+            }
 
             // Heal past critical
-            damageableSystem.Heal(ent, 10);
+            _damageableSystem.Heal(ent, 10);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(damageable.Damage.Total, Is.EqualTo(90));
-                Assert.That(mobState.Critical, Is.EqualTo(false));
-                Assert.That(mobStateSystem.IsAlive(ent), Is.True);
-            });
+                Assert.That(mobState.Critical, Is.False);
+                Assert.That(_mobStateSystem.IsAlive(ent), Is.True);
+            }
 
             // Huge damage still stays Critical (no Dead state)
-            damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 99999));
+            _damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 99999));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(damageable.Damage.Total, Is.EqualTo(100089));
-                Assert.That(mobState.Critical, Is.EqualTo(true));
-                Assert.That(mobStateSystem.IsCritical(ent), Is.True);
-                Assert.That(mobStateSystem.IsAlive(ent), Is.False);
-            });
+                Assert.That(mobState.Critical, Is.True);
+                Assert.That(_mobStateSystem.IsCritical(ent), Is.True);
+                Assert.That(_mobStateSystem.IsAlive(ent), Is.False);
+            }
 
-            entManager.DeleteEntity(ent);
         });
     }
 
@@ -225,36 +213,32 @@ public sealed class CEHealthSystemTest : GameTest
     public async Task RejuvenateRestoresFullHealth()
     {
         var server = Server;
-        var entManager = server.ResolveDependency<IEntityManager>();
-        var damageableSystem = entManager.System<CESharedDamageableSystem>();
-        var mobStateSystem = entManager.System<CEMobStateSystem>();
 
         await server.WaitAssertion(() =>
         {
-            var ent = entManager.SpawnEntity("CEHealthTestDummy", MapCoordinates.Nullspace);
-            var damageable = entManager.GetComponent<CEDamageableComponent>(ent);
-            var mobState = entManager.GetComponent<CEMobStateComponent>(ent);
+            var ent = SSpawn("CEHealthTestDummy");
+            var damageable = SComp<CEDamageableComponent>(ent);
+            var mobState = SComp<CEMobStateComponent>(ent);
 
             // Bring to critical
-            damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 999));
+            _damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 999));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(damageable.Damage.Total, Is.EqualTo(999));
-                Assert.That(mobState.Critical, Is.EqualTo(true));
-            });
+                Assert.That(mobState.Critical, Is.True);
+            }
 
             // Rejuvenate
-            entManager.EventBus.RaiseLocalEvent(ent, new Shared.Rejuvenate.RejuvenateEvent());
+            SEntMan.EventBus.RaiseLocalEvent(ent, new Shared.Rejuvenate.RejuvenateEvent());
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(damageable.Damage.Total, Is.EqualTo(0));
-                Assert.That(mobState.Critical, Is.EqualTo(false));
-                Assert.That(mobStateSystem.IsAlive(ent), Is.True);
-            });
+                Assert.That(damageable.Damage.Total, Is.Zero);
+                Assert.That(mobState.Critical, Is.False);
+                Assert.That(_mobStateSystem.IsAlive(ent), Is.True);
+            }
 
-            entManager.DeleteEntity(ent);
         });
     }
 
@@ -264,34 +248,32 @@ public sealed class CEHealthSystemTest : GameTest
     public async Task CriticalDamageLimitDeletesEntity()
     {
         var server = Server;
-        var entManager = server.ResolveDependency<IEntityManager>();
-        var damageableSystem = entManager.System<CESharedDamageableSystem>();
         EntityUid ent = default;
 
         await server.WaitAssertion(() =>
         {
-            ent = entManager.SpawnEntity("CEHealthTestDummy", MapCoordinates.Nullspace);
-            var mobState = entManager.GetComponent<CEMobStateComponent>(ent);
+            ent = SSpawn("CEHealthTestDummy");
+            var mobState = SComp<CEMobStateComponent>(ent);
 
-            damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 100));
+            _damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 100));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(entManager.EntityExists(ent), Is.True);
-                Assert.That(mobState.Critical, Is.EqualTo(true));
-            });
+                Assert.That(SEntMan.EntityExists(ent), Is.True);
+                Assert.That(mobState.Critical, Is.True);
+            }
 
-            damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 24));
-            Assert.That(entManager.EntityExists(ent), Is.True);
+            _damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 24));
+            Assert.That(SEntMan.EntityExists(ent), Is.True);
 
-            damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 1));
+            _damageableSystem.TakeDamage(ent, new CEDamageSpecifier(TestDamageType, 1));
         });
 
         await server.WaitRunTicks(10);
 
         await server.WaitAssertion(() =>
         {
-            Assert.That(entManager.EntityExists(ent), Is.False);
+            Assert.That(SEntMan.EntityExists(ent), Is.False);
         });
     }
 
@@ -358,11 +340,11 @@ public sealed class CEHealthSystemTest : GameTest
                 },
             };
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(original.Total, Is.EqualTo(50));
                 Assert.That(copy.Total, Is.EqualTo(999));
-            });
+            }
         });
     }
 
@@ -379,34 +361,32 @@ public sealed class CEHealthSystemTest : GameTest
     {
         var pair = Pair;
         var server = Server;
-        var entManager = server.ResolveDependency<IEntityManager>();
-        var protoManager = server.ResolveDependency<IPrototypeManager>();
 
         await server.WaitAssertion(() =>
         {
-            foreach (var proto in protoManager.EnumeratePrototypes<EntityPrototype>())
+            foreach (var proto in SProtoMan.EnumeratePrototypes<EntityPrototype>())
             {
                 if (pair.IsTestPrototype(proto))
                     continue;
 
-                if (!proto.TryGetComponent<CEDamageableComponent>(out _, entManager.ComponentFactory))
+                if (!proto.TryGetComponent<CEDamageableComponent>(out _, SEntMan.ComponentFactory))
                     continue;
 
-                Assert.Multiple(() =>
+                using (Assert.EnterMultipleScope())
                 {
                     Assert.That(
-                        proto.TryGetComponent<DamageableComponent>(out _, entManager.ComponentFactory),
+                        proto.TryGetComponent<DamageableComponent>(out _, SEntMan.ComponentFactory),
                         Is.False,
                         $"Prototype '{proto.ID}' has both CEDamageableComponent and vanilla DamageableComponent");
                     Assert.That(
-                        proto.TryGetComponent<MobStateComponent>(out _, entManager.ComponentFactory),
+                        proto.TryGetComponent<MobStateComponent>(out _, SEntMan.ComponentFactory),
                         Is.False,
                         $"Prototype '{proto.ID}' has both CEDamageableComponent and vanilla MobStateComponent");
                     Assert.That(
-                        proto.TryGetComponent<MobThresholdsComponent>(out _, entManager.ComponentFactory),
+                        proto.TryGetComponent<MobThresholdsComponent>(out _, SEntMan.ComponentFactory),
                         Is.False,
                         $"Prototype '{proto.ID}' has both CEDamageableComponent and vanilla MobThresholdsComponent");
-                });
+                }
             }
         });
     }
