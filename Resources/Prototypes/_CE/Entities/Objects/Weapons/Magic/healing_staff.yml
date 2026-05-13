@@ -27,7 +27,7 @@
             Physical: 1
       OnHeavyHit:
       - !type:Heal
-        amount: 10
+        amount: 9
       - !type:SpawnEntity
         spawns:
         - CEEffectHealingGeneric
@@ -40,13 +40,13 @@
   - type: CEWeaponStaminaCost
     costs:
       Primary: 1
-  - type: CEWeaponChargesCost
+  - type: CEWeaponManaCost
     costs:
-      Primary: 1
-      Secondary: 1
-  - type: CECharges
-    maxCharges: 10
-    currentCharges: 10
+      Primary: 10
+      Secondary: 10
+  - type: CEMagicEnergyContainer
+    maxEnergy: 60
+  - type: CEMagicEnergyExaminable
   - type: Clothing
     slots:
     - neck
@@ -70,7 +70,7 @@
   - type: CEProjectile
     hitEffects:
     - !type:Heal
-      amount: 5
+      amount: 3
     - !type:SpawnEntity
       spawns:
       - CEEffectHealingGeneric

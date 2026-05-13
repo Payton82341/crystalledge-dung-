@@ -36,12 +36,12 @@
     costs:
       Primary: 1
       Secondary: 1
-  - type: CEWeaponChargesCost
+  - type: CEWeaponManaCost
     costs:
-      Primary: 1
-  - type: CECharges
-    maxCharges: 30
-    currentCharges: 30
+      Primary: 5
+  - type: CEMagicEnergyContainer
+    maxEnergy: 60
+  - type: CEMagicEnergyExaminable
   - type: Clothing
     slots:
     - neck
