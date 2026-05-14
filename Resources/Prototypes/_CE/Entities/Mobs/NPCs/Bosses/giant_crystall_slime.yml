@@ -4,7 +4,7 @@
   - CEMobDamageable
   - CEMobCombat
   id: CEMobBossSlime
-  name: giant crystall slime
+  name: giant crystal slime
   description: TODO
   suffix: Boss
   categories: [ ForkFiltered ]
@@ -149,7 +149,7 @@
     width: 45
     range: 10
   - type: Action
-    useDelay: 8
+    useDelay: 6
     icon:
       sprite: _CE/Skills/Mage/firebolt.rsi
       state: icon
@@ -208,7 +208,7 @@
       projectileMaxSpeed: 8
       prototype: CEProjectileGiantSlimeSpreadShot
       projectileCount: 8
-      spread: 0.1
+      spread: 0.15
 
 - type: entity
   id: CEProjectileGiantSlimeSpreadShot
@@ -244,15 +244,10 @@
   parent: CEActionSpellBase
   name: Melee attack
   components:
-  - type: CEVisualizeConeAction
-    width: 360
-    range: 2
   - type: Action
     useDelay: 10
-  - type: TargetAction
-    range: 20
-  - type: WorldTargetAction
-    event: !type:CEWorldTargetActionAnimationEvent
+  - type: InstantAction
+    event: !type:CEInstantActionAnimationEvent
       animation: GiantSlimeSplashAttack
 
 - type: entityEffectAnimation
@@ -333,8 +328,11 @@
   parent: CEActionSpellBase
   name: High Teleport Jump
   components:
+  - type: CEVisualizeRadiusTargetAction
+  - type: CEVisualizeAoEZoneAction
+    radius: 3
   - type: Action
-    useDelay: 10
+    useDelay: 7
   - type: TargetAction
     range: 20
   - type: WorldTargetAction
@@ -387,9 +385,22 @@
         easing: QuadOut
       - time: 0.7
         offset: 0, 10
+      - time: 0.9
+        offset: 0, 10
       - time: 1.4
         offset: 0, 0
         easing: QuadIn
+      colorAnimation:
+      - time: 0.0
+        color: "#ffffff"
+      - time: 0.5
+        color: "#ffffff"
+      - time: 0.6
+        color: "#ffffff01"
+      - time: 0.9
+        color: "#ffffff01"
+      - time: 1
+        color: "#ffffff"
     0.8:
     - !type:Teleport
       effectTarget: Target
@@ -407,6 +418,10 @@
         attackType: Melee
         damage:
           types:
-            Physical: 15
+            Physical: 35
       - !type:ThrowFromUser
         distance: 1
+
+
+
+
