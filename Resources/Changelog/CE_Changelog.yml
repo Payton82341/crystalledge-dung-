@@ -348,3 +348,11 @@
   id: 10026
   time: '2026-05-15T13:00:19.0000000+00:00'
   url: https://github.com/crystallpunk-14/crystalledge/pull/244
+- author: TheShuEd
+  changes:
+  - message: Added the boss battle level. It's still very rough around the edges for
+      now; we'll polish it up later.
+    type: Add
+  id: 10027
+  time: '2026-05-15T15:20:33.0000000+00:00'
+  url: https://github.com/crystallpunk-14/crystalledge/pull/245
