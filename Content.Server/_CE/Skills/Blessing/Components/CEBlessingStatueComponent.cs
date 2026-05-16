@@ -61,4 +61,6 @@ public sealed partial class CEBlessingStatueComponent : Component
     /// </summary>
     [DataField]
     public float TriggerRadius = 3f;
+
+    public HashSet<EntityUid> PlayersInTriggerZone = new();
 }
