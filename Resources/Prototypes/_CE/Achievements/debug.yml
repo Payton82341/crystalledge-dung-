@@ -27,3 +27,7 @@
   id: NeonateLurkerSlayer
   name: ce-achievement-neonate-lurker-slayer-name
   desc: ce-achievement-neonate-lurker-slayer-desc
+  secret: true
+  unlockedIcon:
+    sprite: /Texture/_CE/Achievments/_default.rsi
+    state: secret.png

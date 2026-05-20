@@ -82,9 +82,9 @@
     drawdepth: Mobs
     sprite: _CE/Mobs/neonate_lurker.rsi
     layers:
-    - state: rat
+    - state: live
   - type: MovementSpeedModifier
-    baseSprintSpeed: 0.9
+    baseSprintSpeed: 1.1
   - type: CEWeapon
     spriteRotation: -90
     effectSlots:
